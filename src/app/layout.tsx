@@ -9,21 +9,22 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "TI-ICT VMs",
-  description: "Manage your TI-ICT VMs with ease using our intuitive interface."
+  description:
+    "Manage your TI-ICT VMs with ease using our intuitive interface.",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -36,7 +37,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         "font-sans",
-        inter.variable
+        inter.variable,
       )}
       suppressHydrationWarning
     >

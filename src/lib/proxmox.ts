@@ -13,7 +13,7 @@ if (
 export const proxmoxClient = proxmoxApi({
   host: process.env.PROXMOX_HOST!,
   tokenID: process.env.PROXMOX_TOKEN_ID!,
-  tokenSecret: process.env.PROXMOX_TOKEN_SECRET!
+  tokenSecret: process.env.PROXMOX_TOKEN_SECRET!,
 });
 
 export async function waitForTask(node: string, taskId: string) {

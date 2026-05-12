@@ -5,26 +5,26 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle
+  EmptyTitle,
 } from "@/components/ui/empty";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Computer, Icon } from "lucide-react";
+import { Computer } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   if (!session) redirect("/auth/signin");
 
   const vms = await prisma.vm.findMany({
     where: {
-      userId: session.user.id
-    }
+      userId: session.user.id,
+    },
   });
 
   if (vms.length === 0)

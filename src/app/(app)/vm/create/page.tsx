@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   if (!session) return redirect("/auth/signin");
@@ -16,8 +16,8 @@ export default async function Page() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
-      vms: true
-    }
+      vms: true,
+    },
   });
 
   if (!user) return redirect("/auth/signin");

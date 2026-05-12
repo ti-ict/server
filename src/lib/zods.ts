@@ -13,7 +13,7 @@ export const sshPublicKeySchema = z.string().refine(
       "ssh-dss",
       "ecdsa-sha2-nistp256",
       "ecdsa-sha2-nistp384",
-      "ecdsa-sha2-nistp521"
+      "ecdsa-sha2-nistp521",
     ];
 
     if (!validTypes.includes(type)) return false;
@@ -21,5 +21,5 @@ export const sshPublicKeySchema = z.string().refine(
 
     return true;
   },
-  { message: "Invalid SSH public key" }
+  { message: "Invalid SSH public key" },
 );

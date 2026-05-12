@@ -6,7 +6,7 @@ import {
   Field,
   FieldError,
   FieldGroup,
-  FieldLabel
+  FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
@@ -32,8 +32,8 @@ export function CreateForm({
     defaultValues: {
       hostname: "",
       sshKey: "",
-      ram: 512
-    }
+      ram: 512,
+    },
   });
 
   return (

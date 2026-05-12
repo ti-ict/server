@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export async function Header() {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
   return (
     <header className="w-full p-4 flex flex-row">
