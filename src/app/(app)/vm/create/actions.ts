@@ -7,10 +7,11 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { proxmoxClient, waitForTask } from "@/lib/proxmox";
 import { generateId } from "better-auth";
+import { revalidatePath } from "next/cache";
 
 export async function createVmAction(formData: FormData) {
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: await headers()
   });
 
   if (!session) return;
@@ -18,8 +19,8 @@ export async function createVmAction(formData: FormData) {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
-      vms: true,
-    },
+      vms: true
+    }
   });
 
   if (!user) {
@@ -30,7 +31,7 @@ export async function createVmAction(formData: FormData) {
   const ramUsed = user?.vms.reduce((total, vm) => total + vm.ram, 0);
 
   const result = createVmSchema(user?.allowedRam, ramUsed).safeParse(
-    Object.fromEntries(formData),
+    Object.fromEntries(formData)
   );
 
   if (!result.success) {
@@ -45,11 +46,11 @@ export async function createVmAction(formData: FormData) {
   const newid = await prisma.vm
     .findFirst({
       orderBy: {
-        proxmoxId: "desc",
+        proxmoxId: "desc"
       },
       select: {
-        proxmoxId: true,
-      },
+        proxmoxId: true
+      }
     })
     .then((vm) => (vm ? vm.proxmoxId + 1 : 100));
 
@@ -65,8 +66,8 @@ export async function createVmAction(formData: FormData) {
       status: "provisioning",
       node: "proxmox-1",
       username: "ubuntu",
-      userId: user.id,
-    },
+      userId: user.id
+    }
   });
 
   (async () => {
@@ -77,14 +78,14 @@ export async function createVmAction(formData: FormData) {
         newid,
         name: hostname,
         full: true,
-        storage: "local-lvm",
+        storage: "local-lvm"
       });
 
     await waitForTask("proxmox-1", cloneTask);
 
     await proxmoxClient.nodes.$("proxmox-1").qemu.$(newid).resize.$put({
       disk: "scsi0",
-      size: "+20G",
+      size: "+20G"
     });
 
     // 3. apply cloud-init
@@ -97,7 +98,7 @@ export async function createVmAction(formData: FormData) {
         sshkeys: encodeURIComponent(sshKey.trim()),
         net0: "virtio,bridge=vmbr0,tag=30",
         ipconfig0: `ip=${ip}/22,gw=172.16.100.1`,
-        agent: "enabled=1",
+        agent: "enabled=1"
       });
 
     // 4. start
@@ -108,9 +109,12 @@ export async function createVmAction(formData: FormData) {
 
     await prisma.vm.update({
       where: { id: dbVm.id },
-      data: { status: "running" },
+      data: { status: "running" }
     });
+
+    revalidatePath("/vm");
+    revalidatePath(`/vm/${dbVm.id}`);
   })();
 
-  return redirect(`/vm/${newid}`);
+  redirect(`/vm/${newid}`);
 }

@@ -7,6 +7,7 @@ import {
   EmptyMedia,
   EmptyTitle
 } from "@/components/ui/empty";
+import VMCard from "@/components/vm-card";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Computer } from "lucide-react";
@@ -46,4 +47,12 @@ export default async function Home() {
         </EmptyContent>
       </Empty>
     );
+
+  return (
+    <div className="flex flex-row gap-4">
+      {vms.map((vm) => (
+        <VMCard key={vm.id} vm={vm} />
+      ))}
+    </div>
+  );
 }

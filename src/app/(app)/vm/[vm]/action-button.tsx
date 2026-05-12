@@ -1,0 +1,59 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { VmAction } from "./schema";
+import { toast } from "sonner";
+import { proxmoxVmAction } from "./actions";
+import { cap } from "@/lib/utils";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
+export function ActionButton({
+  vmAction,
+  vmid,
+  node,
+  mobile = false
+}: {
+  vmAction: VmAction;
+  vmid: number;
+  node: string;
+  mobile?: boolean;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleStart() {
+    setLoading(true);
+
+    const promise = proxmoxVmAction(vmid, node, vmAction.key);
+
+    toast.promise(promise, {
+      loading: `${cap(vmAction.happening)} VM...`,
+      success: `VM ${vmAction.completed} successfully!`,
+      error: (err) => `Failed to ${vmAction.key}: ${err.message}`
+    });
+
+    try {
+      await promise;
+    } catch (e) {
+      console.log(`Error during VM ${vmAction.key}:`, e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (mobile) {
+    return (
+      <DropdownMenuItem onClick={handleStart} disabled={loading}>
+        {vmAction.icon}
+        {cap(vmAction.key)}
+      </DropdownMenuItem>
+    );
+  }
+
+  return (
+    <Button onClick={handleStart} disabled={loading} variant="outline">
+      {vmAction.icon}
+      {cap(vmAction.key)}
+    </Button>
+  );
+}

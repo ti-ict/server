@@ -13,10 +13,16 @@ if (
 export const proxmoxClient = proxmoxApi({
   host: process.env.PROXMOX_HOST!,
   tokenID: process.env.PROXMOX_TOKEN_ID!,
-  tokenSecret: process.env.PROXMOX_TOKEN_SECRET!,
+  tokenSecret: process.env.PROXMOX_TOKEN_SECRET!
 });
 
-export async function waitForTask(node: string, taskId: string) {
+export async function waitForTask(
+  node: string,
+  taskId: string
+): Promise<
+  | { success: boolean; error: string }
+  | { success: true; status: string; exitstatus: string }
+> {
   console.log("Waiting for task", taskId);
 
   for (let i = 0; i < 30; i++) {
@@ -29,10 +35,15 @@ export async function waitForTask(node: string, taskId: string) {
 
     console.log(`Task status (${i}):`, task.status, task.exitstatus);
 
-    if (task.status === "stopped" && task.exitstatus === "OK") return;
+    if (task.status === "stopped" && task.exitstatus === "OK")
+      return {
+        success: true,
+        status: task.status,
+        exitstatus: task.exitstatus
+      };
     if (task.exitstatus && task.exitstatus !== "OK") {
-      throw new Error(`Task failed: ${task.exitstatus}`);
+      return { success: false, error: task.exitstatus };
     }
   }
-  throw new Error("Task timed out");
+  return { success: false, error: "Task timed out" };
 }

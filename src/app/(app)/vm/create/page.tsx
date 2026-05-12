@@ -8,24 +8,24 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: await headers()
   });
 
-  if (!session) return redirect("/auth/signin");
+  if (!session) redirect("/auth/signin");
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
-      vms: true,
-    },
+      vms: true
+    }
   });
 
-  if (!user) return redirect("/auth/signin");
+  if (!user) redirect("/auth/signin");
 
   const ramUsed = user?.vms.reduce((total, vm) => total + vm.ram, 0);
   if (user.allowedRam - ramUsed <= 512) {
     return (
-      <div className="flex flex-col items-center gap-4 mt-20">
+      <div className="mt-20 flex flex-col items-center gap-4">
         <h1 className="text-2xl font-bold">No RAM available</h1>
         <p className="text-sm text-balance text-muted-foreground">
           You have used all of your available RAM. Please delete some VMs or
