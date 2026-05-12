@@ -5,7 +5,7 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle,
+  EmptyTitle
 } from "@/components/ui/empty";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -16,15 +16,15 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: await headers()
   });
 
   if (!session) redirect("/auth/signin");
 
   const vms = await prisma.vm.findMany({
     where: {
-      userId: session.user.id,
-    },
+      userId: session.user.id
+    }
   });
 
   if (vms.length === 0)
