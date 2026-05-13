@@ -1,4 +1,4 @@
-import { Play, Power, RotateCw, Square } from "lucide-react";
+import { Play, Power, RotateCw, Square, Trash } from "lucide-react";
 
 export const vmActions: {
   key: string;
@@ -29,6 +29,12 @@ export const vmActions: {
     icon: <Square />,
     happening: "stopping",
     completed: "stopped"
+  },
+  {
+    key: "terminate",
+    icon: <Trash />,
+    happening: "terminating",
+    completed: "terminated"
   }
 ] as const;
 

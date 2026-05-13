@@ -4,6 +4,7 @@ import { proxmoxClient, waitForTask } from "@/lib/proxmox";
 import type { Key } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
   switch (action) {
@@ -76,12 +77,13 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
       revalidatePath(`/vm/${vmid}`);
       return waitedStop;
     case "terminate":
-      const terminateResult = await proxmoxClient.nodes
+      const terminateStopResult = await proxmoxClient.nodes
         .$(node)
         .qemu.$(vmid)
         .status.stop.$post();
-      const waitedTerminate = await waitForTask(node, terminateResult);
-      if (!waitedTerminate.success) throw new Error(waitedTerminate.error);
+      const waitedStopTerminate = await waitForTask(node, terminateStopResult);
+      if (!waitedStopTerminate.success)
+        throw new Error(waitedStopTerminate.error);
       await prisma.vm.update({
         where: {
           id: vmid
@@ -91,6 +93,18 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
         }
       });
       revalidatePath(`/vm/${vmid}`);
-      return waitedTerminate;
+      const deleteResult = await proxmoxClient.nodes
+        .$(node)
+        .qemu.$(vmid)
+        .$delete({ "destroy-unreferenced-disks": true, purge: true });
+      const waitedDelete = await waitForTask(node, deleteResult);
+      if (!waitedDelete.success) throw new Error(waitedDelete.error);
+      await prisma.vm.delete({
+        where: {
+          id: vmid
+        }
+      });
+      revalidatePath("/");
+      redirect("/");
   }
 }

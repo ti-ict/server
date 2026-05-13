@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { proxmoxVmAction } from "./actions";
 import { cap } from "@/lib/utils";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export function ActionButton({
   vmAction,
@@ -29,7 +30,12 @@ export function ActionButton({
     toast.promise(promise, {
       loading: `${cap(vmAction.happening)} VM...`,
       success: `VM ${vmAction.completed} successfully!`,
-      error: (err) => `Failed to ${vmAction.key}: ${err.message}`
+      error: (err) => {
+        if (isRedirectError(err))
+          return `VM ${vmAction.completed} successfully!`;
+
+        return `Failed to ${vmAction.key}: ${err.message}`;
+      }
     });
 
     try {
