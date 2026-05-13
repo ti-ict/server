@@ -38,8 +38,8 @@ export default async function Page() {
     );
   }
   return (
-    <div className="flex w-full items-center justify-center md:p-10">
-      <div className="w-full max-w-sm rounded-lg border bg-popover p-6">
+    <div className="flex w-full items-center justify-center">
+      <div className="w-full max-w-sm rounded-lg p-6 sm:border sm:bg-popover">
         <CreateForm allowedRam={user.allowedRam} ramUsed={ramUsed} />
       </div>
     </div>

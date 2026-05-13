@@ -14,9 +14,13 @@ import { Button } from "@/components/ui/button";
 export default async function Page({ params }: { params: { vm: string } }) {
   const { vm } = await params;
 
+  const numberVm = parseInt(vm);
+
+  if (isNaN(numberVm)) redirect("/");
+
   const dbVm = await prisma.vm.findUnique({
     where: {
-      id: vm
+      id: numberVm
     }
   });
 
@@ -24,8 +28,9 @@ export default async function Page({ params }: { params: { vm: string } }) {
 
   return (
     <div className="px-20 md:min-w-full">
-      <div className="flex flex-row items-center justify-items-center gap-4">
+      <div className="flex flex-row items-end gap-4">
         <H1>{dbVm.name}</H1>
+        <span className="pb-1 text-muted-foreground">{dbVm.status}</span>
         <div className="ml-auto flex items-center gap-4">
           {/* Mobile */}
           <div className="flex md:hidden">
@@ -38,7 +43,7 @@ export default async function Page({ params }: { params: { vm: string } }) {
                   <ActionButton
                     key={action.key}
                     vmAction={action}
-                    vmid={dbVm.proxmoxId}
+                    vmid={dbVm.id}
                     node={dbVm.node}
                     mobile
                   />
@@ -53,7 +58,7 @@ export default async function Page({ params }: { params: { vm: string } }) {
               <ActionButton
                 key={action.key}
                 vmAction={action}
-                vmid={dbVm.proxmoxId}
+                vmid={dbVm.id}
                 node={dbVm.node}
               />
             ))}

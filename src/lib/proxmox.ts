@@ -20,7 +20,7 @@ export async function waitForTask(
   node: string,
   taskId: string
 ): Promise<
-  | { success: boolean; error: string }
+  | { success: false; error: string }
   | { success: true; status: string; exitstatus: string }
 > {
   console.log("Waiting for task", taskId);

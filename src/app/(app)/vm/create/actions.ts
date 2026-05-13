@@ -4,17 +4,21 @@ import { headers } from "next/headers";
 import { createVmSchema } from "./schema";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { proxmoxClient, waitForTask } from "@/lib/proxmox";
-import { generateId } from "better-auth";
 import { revalidatePath } from "next/cache";
 
-export async function createVmAction(formData: FormData) {
+export async function createVmAction(data: {
+  hostname: string;
+  sshKey: string;
+  ram: number;
+}): Promise<
+  { success: false; error: string } | { success: true; vmId: number }
+> {
   const session = await auth.api.getSession({
     headers: await headers()
   });
 
-  if (!session) return;
+  if (!session) return { success: false, error: "Unauthorized" };
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -25,18 +29,16 @@ export async function createVmAction(formData: FormData) {
 
   if (!user) {
     console.error("User not found in database");
-    return;
+    return { success: false, error: "User not found" };
   }
 
   const ramUsed = user?.vms.reduce((total, vm) => total + vm.ram, 0);
 
-  const result = createVmSchema(user?.allowedRam, ramUsed).safeParse(
-    Object.fromEntries(formData)
-  );
+  const result = createVmSchema(user?.allowedRam, ramUsed).safeParse(data);
 
   if (!result.success) {
     console.error(result.error);
-    return;
+    return { success: false, error: "Invalid form data" };
   }
 
   const { hostname, sshKey, ram } = result.data;
@@ -46,31 +48,30 @@ export async function createVmAction(formData: FormData) {
   const newid = await prisma.vm
     .findFirst({
       orderBy: {
-        proxmoxId: "desc"
+        id: "desc"
       },
       select: {
-        proxmoxId: true
+        id: true
       }
     })
-    .then((vm) => (vm ? vm.proxmoxId + 1 : 100));
+    .then((vm) => (vm ? vm.id + 1 : 100));
 
-  const ip = `172.16.100.${newid}`;
+  try {
+    const ip = `172.16.100.${newid}`;
 
-  const dbVm = await prisma.vm.create({
-    data: {
-      id: generateId(),
-      name: hostname,
-      ram,
-      ip,
-      proxmoxId: newid,
-      status: "provisioning",
-      node: "proxmox-1",
-      username: "ubuntu",
-      userId: user.id
-    }
-  });
+    const dbVm = await prisma.vm.create({
+      data: {
+        id: newid,
+        name: hostname,
+        ram,
+        ip,
+        status: "provisioning",
+        node: "proxmox-1",
+        username: "ubuntu",
+        userId: user.id
+      }
+    });
 
-  (async () => {
     const cloneTask = await proxmoxClient.nodes
       .$("proxmox-1")
       .qemu.$(9000)
@@ -108,13 +109,18 @@ export async function createVmAction(formData: FormData) {
       .status.start.$post({});
 
     await prisma.vm.update({
-      where: { id: dbVm.id },
+      where: { id: newid },
       data: { status: "running" }
     });
+  } catch (error) {
+    console.error("Error creating VM:", error);
+    await prisma.vm.delete({
+      where: { id: newid }
+    });
+    return { success: false, error: "Failed to create VM" };
+  }
 
-    revalidatePath("/vm");
-    revalidatePath(`/vm/${dbVm.id}`);
-  })();
+  revalidatePath(`/vm/${newid}`);
 
-  redirect(`/vm/${newid}`);
+  return { success: true, vmId: newid };
 }

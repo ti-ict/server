@@ -15,6 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createVmSchema, type CreateVmSchema } from "./schema";
 import { createVmAction } from "./actions";
 import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function CreateForm({
   allowedRam,
@@ -25,6 +27,8 @@ export function CreateForm({
   allowedRam: number;
   ramUsed: number;
 }) {
+  const router = useRouter();
+
   const form = useForm<z.infer<ReturnType<CreateVmSchema>>>({
     // @ts-expect-error number coercion is required for the RAM field, but the schema is typed to return a number, so we need to ignore this error
     resolver: zodResolver(createVmSchema(allowedRam, ramUsed)),
@@ -36,11 +40,28 @@ export function CreateForm({
     }
   });
 
+  const onSubmit = form.handleSubmit(async (data) => {
+    toast.promise(
+      //@ts-expect-error createVmAction returns a promise that resolves to an object with a success property, but the toast expects a promise that resolves to void, so we need to ignore this error
+      createVmAction(data).then((result) => {
+        if (!result.success) throw new Error(result.error);
+
+        router.push(`/vm/${result.vmId}`);
+        return result;
+      }),
+      {
+        loading: "Creating VM...",
+        success: "VM created!",
+        error: (err) => err?.message ?? "Failed to create VM"
+      }
+    );
+  });
+
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
       {...props}
-      action={createVmAction}
+      onSubmit={onSubmit}
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
