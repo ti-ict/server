@@ -5,8 +5,21 @@ import type { Key } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { checkSession } from "@/lib/utils-server";
 
 export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
+  const { success, user } = await checkSession();
+  if (!success) redirect("/auth/signin");
+
+  const vm = await prisma.vm.findUnique({
+    where: {
+      id: vmid
+    }
+  });
+
+  if (!vm) throw new Error("VM not found");
+  if (vm.userId !== user.id) redirect("/");
+
   switch (action) {
     case "start":
       const result = await proxmoxClient.nodes
