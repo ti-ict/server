@@ -13,8 +13,9 @@ export default async function Page() {
         <EditProfileForm
           name={session.user.name}
           email={session.user.email}
-          className="mb-2"
+          className="mb-4"
         />
+
         <ClientButtons />
       </div>
     </div>

@@ -3,16 +3,22 @@
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent
-} from "@/components/ui/popover";
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import { authClient } from "@/lib/auth-client";
 import { KeyRound, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { PasswordForm } from "./password-form";
+import { useState } from "react";
+import PopoverWarning from "@/components/popover-warning";
 
 export default function ClientButtons() {
   const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   async function signOut() {
     await authClient.signOut({
@@ -24,28 +30,28 @@ export default function ClientButtons() {
     });
   }
   return (
-    <ButtonGroup className="min-w-full">
-      <Button variant="outline">
-        <KeyRound />
-        Change Password
-      </Button>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">
-            <LogOut />
-            Sign Out
+    <ButtonGroup className="w-full">
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="flex-1">
+            <KeyRound />
+            Change Password
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-32">
-          <Button
-            variant="destructive"
-            onClick={() => signOut()}
-            className="w-full"
-          >
-            Are you sure?
-          </Button>
-        </PopoverContent>
-      </Popover>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+          </DialogHeader>
+          <PasswordForm setDialogOpen={setDialogOpen} />
+        </DialogContent>
+      </Dialog>
+
+      <PopoverWarning action={signOut}>
+        <Button variant="outline" className="flex-1">
+          <LogOut />
+          Sign Out
+        </Button>
+      </PopoverWarning>
     </ButtonGroup>
   );
 }

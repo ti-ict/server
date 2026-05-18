@@ -5,6 +5,7 @@ export const vmActions: {
   icon: React.ReactNode;
   happening: string;
   completed: string;
+  popOver?: boolean;
 }[] = [
   {
     key: "start",
@@ -34,7 +35,8 @@ export const vmActions: {
     key: "terminate",
     icon: <Trash />,
     happening: "terminating",
-    completed: "terminated"
+    completed: "terminated",
+    popOver: true
   }
 ] as const;
 

@@ -8,6 +8,7 @@ import { proxmoxVmAction } from "./actions";
 import { cap } from "@/lib/utils";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import PopoverWarning from "@/components/popover-warning";
 
 export function ActionButton({
   vmAction,
@@ -53,6 +54,17 @@ export function ActionButton({
         {vmAction.icon}
         {cap(vmAction.key)}
       </DropdownMenuItem>
+    );
+  }
+
+  if (vmAction.popOver) {
+    return (
+      <PopoverWarning action={handleStart}>
+        <Button variant="outline">
+          {vmAction.icon}
+          {cap(vmAction.key)}
+        </Button>
+      </PopoverWarning>
     );
   }
 

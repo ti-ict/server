@@ -9,10 +9,9 @@ import {
   FieldLabel
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { profileSchema, ProfileSchema } from "./schema";
-import editProfileAction from "./actions";
+import { editProfileAction } from "./actions";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -25,7 +24,7 @@ export function EditProfileForm({
   name: string;
   email: string;
 }) {
-  const form = useForm<z.infer<ProfileSchema>>({
+  const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     mode: "onBlur",
     defaultValues: {

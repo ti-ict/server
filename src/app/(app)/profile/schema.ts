@@ -12,4 +12,26 @@ export const profileSchema = z.object({
     .max(255, "Email must be 255 characters or less")
 });
 
-export type ProfileSchema = typeof profileSchema;
+export const passwordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(255, "Password must be 255 characters or less"),
+    newPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(255, "Password must be 255 characters or less"),
+    confirmPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(255, "Password must be 255 characters or less"),
+    destroySessions: z.boolean().default(false)
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
+  });
+
+export type ProfileSchema = z.Infer<typeof profileSchema>;
+export type PasswordSchema = z.Infer<typeof passwordSchema>;

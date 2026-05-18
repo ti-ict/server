@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { profileSchema } from "./schema";
 import { prisma } from "@/lib/prisma";
 
-export default async function editProfileAction(data: {
+export async function editProfileAction(data: {
   email: string;
   name: string;
 }): Promise<{ success: false; error: string } | { success: true }> {

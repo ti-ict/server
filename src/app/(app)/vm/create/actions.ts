@@ -94,6 +94,7 @@ export async function createVmAction(data: {
       .$("proxmox-1")
       .qemu.$(newid)
       .config.$post({
+        memory: ram.toString(),
         ciuser: "ubuntu",
         cipassword: "password",
         sshkeys: encodeURIComponent(sshKey.trim()),
