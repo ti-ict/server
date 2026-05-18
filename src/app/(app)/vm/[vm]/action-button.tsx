@@ -26,15 +26,15 @@ export function ActionButton({
   async function handleStart() {
     setLoading(true);
 
-    const promise = proxmoxVmAction(vmid, node, vmAction.key);
+    const promise = proxmoxVmAction(vmid, node, vmAction.key).catch((err) => {
+      if (isRedirectError(err)) return;
+      throw err;
+    });
 
     toast.promise(promise, {
       loading: `${cap(vmAction.happening)} VM...`,
       success: `VM ${vmAction.completed} successfully!`,
       error: (err) => {
-        if (isRedirectError(err))
-          return `VM ${vmAction.completed} successfully!`;
-
         return `Failed to ${vmAction.key}: ${err.message}`;
       }
     });
