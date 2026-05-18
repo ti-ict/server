@@ -11,9 +11,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
-import { ProfileSchema } from "./schema";
+import { profileSchema, ProfileSchema } from "./schema";
 import editProfileAction from "./actions";
 import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function EditProfileForm({
   name,
@@ -25,6 +26,7 @@ export function EditProfileForm({
   email: string;
 }) {
   const form = useForm<z.infer<ProfileSchema>>({
+    resolver: zodResolver(profileSchema),
     mode: "onBlur",
     defaultValues: {
       name,
@@ -90,6 +92,7 @@ export function EditProfileForm({
                 aria-invalid={fieldState.invalid}
                 placeholder="m@example.com"
                 type="email"
+                autoComplete="off"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

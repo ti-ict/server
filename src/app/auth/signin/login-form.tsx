@@ -16,7 +16,11 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email address."),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email is required")
+    .max(255, "Email must be 255 characters or less"),
   password: z.string().min(8, "Password must be at least 8 characters.")
 });
 
