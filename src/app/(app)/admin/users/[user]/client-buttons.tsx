@@ -14,15 +14,19 @@ import { useState } from "react";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ClientButtons({ userId }: { userId: string }) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
 
   async function handleImpersonate() {
     const promise = authClient.admin.impersonateUser({ userId });
     toast.promise(
       promise.then((result) => {
         if (result.error) throw new Error(result.error.message);
+        router.push("/");
+        router.refresh();
         return result;
       }),
       {

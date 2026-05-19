@@ -889,7 +889,8 @@ export const SessionScalarFieldEnum = {
   updatedAt: "updatedAt",
   ipAddress: "ipAddress",
   userAgent: "userAgent",
-  userId: "userId"
+  userId: "userId",
+  impersonatedBy: "impersonatedBy"
 } as const;
 
 export type SessionScalarFieldEnum =

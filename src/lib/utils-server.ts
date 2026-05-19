@@ -1,16 +1,14 @@
 import { headers } from "next/headers";
 import { auth } from "./auth";
 import { prisma } from "./prisma";
-import { User } from "@/generated/prisma/client";
 
-export async function checkSession(): Promise<
-  { success: false; user: undefined } | { success: true; user: User }
-> {
+export async function checkSession() {
   const session = await auth.api.getSession({
     headers: await headers()
   });
 
-  if (!session?.user) return { success: false, user: undefined };
+  if (!session?.user)
+    return { success: false, user: undefined, session: undefined };
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -19,6 +17,6 @@ export async function checkSession(): Promise<
     }
   });
 
-  if (!user) return { success: false, user: undefined };
-  return { success: true, user };
+  if (!user) return { success: false, user: undefined, session: undefined };
+  return { success: true, user, session: session.session };
 }
