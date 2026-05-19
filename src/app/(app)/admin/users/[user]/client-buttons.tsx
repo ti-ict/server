@@ -15,8 +15,19 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent
+} from "@/components/ui/tooltip";
 
-export default function ClientButtons({ userId }: { userId: string }) {
+export default function ClientButtons({
+  userId,
+  allowImpersonate
+}: {
+  userId: string;
+  allowImpersonate: boolean;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
 
@@ -53,10 +64,27 @@ export default function ClientButtons({ userId }: { userId: string }) {
           <PasswordForm setDialogOpen={setDialogOpen} userId={userId} />
         </DialogContent>
       </Dialog>
-      <Button variant="outline" className="flex-1" onClick={handleImpersonate}>
-        <VenetianMask />
-        Impersonate
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span
+            data-slot="button"
+            className="inline-flex flex-1 [&>button]:rounded-l-none [&>button]:rounded-r-md [&>button]:border-l-0"
+          >
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleImpersonate}
+              disabled={!allowImpersonate}
+            >
+              <VenetianMask />
+              Impersonate
+            </Button>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent className={allowImpersonate ? "hidden" : ""}>
+          You can&apos;t impersonate admins.
+        </TooltipContent>
+      </Tooltip>
     </ButtonGroup>
   );
 }

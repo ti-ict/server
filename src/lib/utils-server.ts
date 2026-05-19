@@ -1,8 +1,21 @@
 import { headers } from "next/headers";
 import { auth } from "./auth";
 import { prisma } from "./prisma";
+import { Session } from "better-auth";
+import { User } from "@/generated/prisma/client";
 
-export async function checkSession() {
+export async function checkSession(): Promise<
+  | {
+      success: true;
+      user: User;
+      session: Session;
+    }
+  | {
+      success: false;
+      user: undefined;
+      session: undefined;
+    }
+> {
   const session = await auth.api.getSession({
     headers: await headers()
   });
