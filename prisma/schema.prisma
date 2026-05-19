@@ -21,15 +21,13 @@ model User {
   allowedRam    Int       @default(8192) // in MB
   allowedVms    Int       @default(5)
   allowedCpus   Int       @default(4)
-  role          Role      @default(USER)
+  role          String    @default("user")
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
 
   @@unique([email])
   @@map("user")
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 model Session {

@@ -1,17 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { CreateForm } from "./create-form";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { redirect } from "next/navigation";
+import { checkSession } from "@/lib/utils-server";
 
 export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
+  const session = await checkSession();
 
-  if (!session) redirect("/auth/signin");
+  if (!session.success) redirect("/auth/signin");
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },

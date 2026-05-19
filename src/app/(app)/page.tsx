@@ -8,19 +8,16 @@ import {
   EmptyTitle
 } from "@/components/ui/empty";
 import VMCard from "@/components/vm-card";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkSession } from "@/lib/utils-server";
 import { Computer } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
+  const session = await checkSession();
 
-  if (!session) redirect("/auth/signin");
+  if (!session.success) redirect("/auth/signin");
 
   const vms = await prisma.vm.findMany({
     where: {

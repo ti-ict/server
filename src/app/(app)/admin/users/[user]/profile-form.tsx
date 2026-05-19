@@ -9,49 +9,43 @@ import {
   FieldLabel
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createVmSchema, type CreateVmSchema } from "./schema";
-import { createVmAction } from "./actions";
-import { Slider } from "@/components/ui/slider";
+import { profileSchema, ProfileSchema } from "./schema";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Slider } from "@/components/ui/slider";
+import { editProfileAction } from "./actions";
+import { User } from "@/generated/prisma/client";
 
-export function CreateForm({
-  allowedRam,
-  ramUsed,
+export function EditProfileForm({
+  user,
   className,
   ...props
 }: React.ComponentProps<"form"> & {
-  allowedRam: number;
-  ramUsed: number;
+  user: User;
 }) {
-  const router = useRouter();
-
-  const form = useForm<z.infer<ReturnType<CreateVmSchema>>>({
-    // @ts-expect-error number coercion is required for the RAM field, but the schema is typed to return a number, so we need to ignore this error
-    resolver: zodResolver(createVmSchema(allowedRam, ramUsed)),
+  const form = useForm<ProfileSchema>({
+    //@ts-expect-error zod coercion
+    resolver: zodResolver(profileSchema),
     mode: "onBlur",
     defaultValues: {
-      hostname: "",
-      sshKey: "",
-      ram: 512
+      name: user.name || "",
+      email: user.email,
+      allowedRam: user.allowedRam
     }
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
     toast.promise(
-      //@ts-expect-error createVmAction returns a promise that resolves to an object with a success property, but the toast expects a promise that resolves to void, so we need to ignore this error
-      createVmAction(data).then((result) => {
+      // @ts-expect-error Server action and form data types don't line up perfectly, but we know this is fine
+      editProfileAction({ ...data, id: user.id }).then((result) => {
         if (!result.success) throw new Error(result.error);
-        router.push(`/vm/${result.vmId}`);
         return result;
       }),
       {
-        loading: "Creating VM...",
-        success: "VM created!",
-        error: (err) => err?.message ?? "Failed to create VM"
+        loading: "Updating...",
+        success: "Profile updated!",
+        error: (err) => err?.message ?? "Failed to update profile"
       }
     );
   });
@@ -64,22 +58,22 @@ export function CreateForm({
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create a new VM</h1>
+          <h1 className="text-2xl font-bold">Edit {user.name}</h1>
           <p className="text-sm text-balance text-muted-foreground">
-            Fill out the form below to create a new VM
+            Update {user.name}&apos;s profile information below
           </p>
         </div>
         <Controller
-          name="hostname"
+          name="name"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-rhf-demo-hostname">Hostname</FieldLabel>
+              <FieldLabel htmlFor="form-rhf-demo-hostname">Name</FieldLabel>
               <Input
                 {...field}
                 id="form-rhf-demo-hostname"
                 aria-invalid={fieldState.invalid}
-                placeholder="my-vm"
+                placeholder="John Doe"
                 autoComplete="off"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -88,20 +82,18 @@ export function CreateForm({
         />
 
         <Controller
-          name="sshKey"
+          name="email"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-rhf-demo-sshKey">
-                Public SSH Key
-              </FieldLabel>
+              <FieldLabel htmlFor="form-rhf-demo-email">Email</FieldLabel>
               <Input
                 {...field}
-                id="form-rhf-demo-sshKey"
+                id="form-rhf-demo-email"
                 aria-invalid={fieldState.invalid}
-                placeholder="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ..."
+                placeholder="m@example.com"
+                type="email"
                 autoComplete="off"
-                type="password"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -109,24 +101,23 @@ export function CreateForm({
         />
 
         <Controller
-          name="ram"
+          name="allowedRam"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-rhf-demo-ram">
+              <FieldLabel htmlFor="form-rhf-demo-allowed-ram">
                 <span>RAM</span>
                 <span className="ml-auto text-xs text-muted-foreground">
-                  {field.value / 1024} GiB (Max: {(allowedRam - ramUsed) / 1024}{" "}
-                  GiB)
+                  {field.value / 1024} GiB (Max: 24 GiB)
                 </span>
               </FieldLabel>
               <Slider
-                min={512}
-                max={allowedRam - ramUsed}
+                min={1024}
+                max={24576}
                 step={512}
                 value={[field.value]}
                 onValueChange={field.onChange}
-                name="ram"
+                name="allowedRam"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -135,7 +126,7 @@ export function CreateForm({
 
         <Field>
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            Create VM
+            Save Changes
           </Button>
         </Field>
       </FieldGroup>

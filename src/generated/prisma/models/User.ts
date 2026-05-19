@@ -49,7 +49,10 @@ export type UserMinAggregateOutputType = {
   allowedRam: number | null;
   allowedVms: number | null;
   allowedCpus: number | null;
-  role: $Enums.Role | null;
+  role: string | null;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: Date | null;
 };
 
 export type UserMaxAggregateOutputType = {
@@ -63,7 +66,10 @@ export type UserMaxAggregateOutputType = {
   allowedRam: number | null;
   allowedVms: number | null;
   allowedCpus: number | null;
-  role: $Enums.Role | null;
+  role: string | null;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: Date | null;
 };
 
 export type UserCountAggregateOutputType = {
@@ -78,6 +84,9 @@ export type UserCountAggregateOutputType = {
   allowedVms: number;
   allowedCpus: number;
   role: number;
+  banned: number;
+  banReason: number;
+  banExpires: number;
   _all: number;
 };
 
@@ -105,6 +114,9 @@ export type UserMinAggregateInputType = {
   allowedVms?: true;
   allowedCpus?: true;
   role?: true;
+  banned?: true;
+  banReason?: true;
+  banExpires?: true;
 };
 
 export type UserMaxAggregateInputType = {
@@ -119,6 +131,9 @@ export type UserMaxAggregateInputType = {
   allowedVms?: true;
   allowedCpus?: true;
   role?: true;
+  banned?: true;
+  banReason?: true;
+  banExpires?: true;
 };
 
 export type UserCountAggregateInputType = {
@@ -133,6 +148,9 @@ export type UserCountAggregateInputType = {
   allowedVms?: true;
   allowedCpus?: true;
   role?: true;
+  banned?: true;
+  banReason?: true;
+  banExpires?: true;
   _all?: true;
 };
 
@@ -240,7 +258,10 @@ export type UserGroupByOutputType = {
   allowedRam: number;
   allowedVms: number;
   allowedCpus: number;
-  role: $Enums.Role;
+  role: string;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: Date | null;
   _count: UserCountAggregateOutputType | null;
   _avg: UserAvgAggregateOutputType | null;
   _sum: UserSumAggregateOutputType | null;
@@ -275,7 +296,10 @@ export type UserWhereInput = {
   allowedRam?: Prisma.IntFilter<"User"> | number;
   allowedVms?: Prisma.IntFilter<"User"> | number;
   allowedCpus?: Prisma.IntFilter<"User"> | number;
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role;
+  role?: Prisma.StringFilter<"User"> | string;
+  banned?: Prisma.BoolNullableFilter<"User"> | boolean | null;
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null;
+  banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
   sessions?: Prisma.SessionListRelationFilter;
   accounts?: Prisma.AccountListRelationFilter;
   vms?: Prisma.VmListRelationFilter;
@@ -293,6 +317,9 @@ export type UserOrderByWithRelationInput = {
   allowedVms?: Prisma.SortOrder;
   allowedCpus?: Prisma.SortOrder;
   role?: Prisma.SortOrder;
+  banned?: Prisma.SortOrderInput | Prisma.SortOrder;
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder;
+  banExpires?: Prisma.SortOrderInput | Prisma.SortOrder;
   sessions?: Prisma.SessionOrderByRelationAggregateInput;
   accounts?: Prisma.AccountOrderByRelationAggregateInput;
   vms?: Prisma.VmOrderByRelationAggregateInput;
@@ -313,7 +340,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     allowedRam?: Prisma.IntFilter<"User"> | number;
     allowedVms?: Prisma.IntFilter<"User"> | number;
     allowedCpus?: Prisma.IntFilter<"User"> | number;
-    role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role;
+    role?: Prisma.StringFilter<"User"> | string;
+    banned?: Prisma.BoolNullableFilter<"User"> | boolean | null;
+    banReason?: Prisma.StringNullableFilter<"User"> | string | null;
+    banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
     sessions?: Prisma.SessionListRelationFilter;
     accounts?: Prisma.AccountListRelationFilter;
     vms?: Prisma.VmListRelationFilter;
@@ -333,6 +363,9 @@ export type UserOrderByWithAggregationInput = {
   allowedVms?: Prisma.SortOrder;
   allowedCpus?: Prisma.SortOrder;
   role?: Prisma.SortOrder;
+  banned?: Prisma.SortOrderInput | Prisma.SortOrder;
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder;
+  banExpires?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.UserCountOrderByAggregateInput;
   _avg?: Prisma.UserAvgOrderByAggregateInput;
   _max?: Prisma.UserMaxOrderByAggregateInput;
@@ -358,7 +391,14 @@ export type UserScalarWhereWithAggregatesInput = {
   allowedRam?: Prisma.IntWithAggregatesFilter<"User"> | number;
   allowedVms?: Prisma.IntWithAggregatesFilter<"User"> | number;
   allowedCpus?: Prisma.IntWithAggregatesFilter<"User"> | number;
-  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role;
+  role?: Prisma.StringWithAggregatesFilter<"User"> | string;
+  banned?: Prisma.BoolNullableWithAggregatesFilter<"User"> | boolean | null;
+  banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
+  banExpires?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<"User">
+    | Date
+    | string
+    | null;
 };
 
 export type UserCreateInput = {
@@ -372,7 +412,10 @@ export type UserCreateInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmCreateNestedManyWithoutUserInput;
@@ -389,7 +432,10 @@ export type UserUncheckedCreateInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmUncheckedCreateNestedManyWithoutUserInput;
@@ -406,7 +452,14 @@ export type UserUpdateInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUpdateManyWithoutUserNestedInput;
@@ -423,7 +476,14 @@ export type UserUncheckedUpdateInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUncheckedUpdateManyWithoutUserNestedInput;
@@ -440,7 +500,10 @@ export type UserCreateManyInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
 };
 
 export type UserUpdateManyMutationInput = {
@@ -454,7 +517,14 @@ export type UserUpdateManyMutationInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type UserUncheckedUpdateManyInput = {
@@ -468,7 +538,14 @@ export type UserUncheckedUpdateManyInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type UserCountOrderByAggregateInput = {
@@ -483,6 +560,9 @@ export type UserCountOrderByAggregateInput = {
   allowedVms?: Prisma.SortOrder;
   allowedCpus?: Prisma.SortOrder;
   role?: Prisma.SortOrder;
+  banned?: Prisma.SortOrder;
+  banReason?: Prisma.SortOrder;
+  banExpires?: Prisma.SortOrder;
 };
 
 export type UserAvgOrderByAggregateInput = {
@@ -503,6 +583,9 @@ export type UserMaxOrderByAggregateInput = {
   allowedVms?: Prisma.SortOrder;
   allowedCpus?: Prisma.SortOrder;
   role?: Prisma.SortOrder;
+  banned?: Prisma.SortOrder;
+  banReason?: Prisma.SortOrder;
+  banExpires?: Prisma.SortOrder;
 };
 
 export type UserMinOrderByAggregateInput = {
@@ -517,6 +600,9 @@ export type UserMinOrderByAggregateInput = {
   allowedVms?: Prisma.SortOrder;
   allowedCpus?: Prisma.SortOrder;
   role?: Prisma.SortOrder;
+  banned?: Prisma.SortOrder;
+  banReason?: Prisma.SortOrder;
+  banExpires?: Prisma.SortOrder;
 };
 
 export type UserSumOrderByAggregateInput = {
@@ -554,8 +640,12 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number;
 };
 
-export type EnumRoleFieldUpdateOperationsInput = {
-  set?: $Enums.Role;
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null;
+};
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null;
 };
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -647,7 +737,10 @@ export type UserCreateWithoutSessionsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmCreateNestedManyWithoutUserInput;
 };
@@ -663,7 +756,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmUncheckedCreateNestedManyWithoutUserInput;
 };
@@ -707,7 +803,14 @@ export type UserUpdateWithoutSessionsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUpdateManyWithoutUserNestedInput;
 };
@@ -723,7 +826,14 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUncheckedUpdateManyWithoutUserNestedInput;
 };
@@ -739,7 +849,10 @@ export type UserCreateWithoutAccountsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmCreateNestedManyWithoutUserInput;
 };
@@ -755,7 +868,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
   vms?: Prisma.VmUncheckedCreateNestedManyWithoutUserInput;
 };
@@ -799,7 +915,14 @@ export type UserUpdateWithoutAccountsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUpdateManyWithoutUserNestedInput;
 };
@@ -815,7 +938,14 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
   vms?: Prisma.VmUncheckedUpdateManyWithoutUserNestedInput;
 };
@@ -831,7 +961,10 @@ export type UserCreateWithoutVmsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput;
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput;
 };
@@ -847,7 +980,10 @@ export type UserUncheckedCreateWithoutVmsInput = {
   allowedRam?: number;
   allowedVms?: number;
   allowedCpus?: number;
-  role?: $Enums.Role;
+  role?: string;
+  banned?: boolean | null;
+  banReason?: string | null;
+  banExpires?: Date | string | null;
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput;
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput;
 };
@@ -891,7 +1027,14 @@ export type UserUpdateWithoutVmsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput;
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput;
 };
@@ -907,7 +1050,14 @@ export type UserUncheckedUpdateWithoutVmsInput = {
   allowedRam?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedVms?: Prisma.IntFieldUpdateOperationsInput | number;
   allowedCpus?: Prisma.IntFieldUpdateOperationsInput | number;
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role;
+  role?: Prisma.StringFieldUpdateOperationsInput | string;
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null;
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  banExpires?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput;
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput;
 };
@@ -990,6 +1140,9 @@ export type UserSelect<
     allowedVms?: boolean;
     allowedCpus?: boolean;
     role?: boolean;
+    banned?: boolean;
+    banReason?: boolean;
+    banExpires?: boolean;
     sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>;
     accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>;
     vms?: boolean | Prisma.User$vmsArgs<ExtArgs>;
@@ -1014,6 +1167,9 @@ export type UserSelectCreateManyAndReturn<
     allowedVms?: boolean;
     allowedCpus?: boolean;
     role?: boolean;
+    banned?: boolean;
+    banReason?: boolean;
+    banExpires?: boolean;
   },
   ExtArgs["result"]["user"]
 >;
@@ -1034,6 +1190,9 @@ export type UserSelectUpdateManyAndReturn<
     allowedVms?: boolean;
     allowedCpus?: boolean;
     role?: boolean;
+    banned?: boolean;
+    banReason?: boolean;
+    banExpires?: boolean;
   },
   ExtArgs["result"]["user"]
 >;
@@ -1050,6 +1209,9 @@ export type UserSelectScalar = {
   allowedVms?: boolean;
   allowedCpus?: boolean;
   role?: boolean;
+  banned?: boolean;
+  banReason?: boolean;
+  banExpires?: boolean;
 };
 
 export type UserOmit<
@@ -1066,7 +1228,10 @@ export type UserOmit<
   | "allowedRam"
   | "allowedVms"
   | "allowedCpus"
-  | "role",
+  | "role"
+  | "banned"
+  | "banReason"
+  | "banExpires",
   ExtArgs["result"]["user"]
 >;
 export type UserInclude<
@@ -1109,7 +1274,10 @@ export type $UserPayload<
       allowedRam: number;
       allowedVms: number;
       allowedCpus: number;
-      role: $Enums.Role;
+      role: string;
+      banned: boolean | null;
+      banReason: string | null;
+      banExpires: Date | null;
     },
     ExtArgs["result"]["user"]
   >;
@@ -1745,7 +1913,10 @@ export interface UserFieldRefs {
   readonly allowedRam: Prisma.FieldRef<"User", "Int">;
   readonly allowedVms: Prisma.FieldRef<"User", "Int">;
   readonly allowedCpus: Prisma.FieldRef<"User", "Int">;
-  readonly role: Prisma.FieldRef<"User", "Role">;
+  readonly role: Prisma.FieldRef<"User", "String">;
+  readonly banned: Prisma.FieldRef<"User", "Boolean">;
+  readonly banReason: Prisma.FieldRef<"User", "String">;
+  readonly banExpires: Prisma.FieldRef<"User", "DateTime">;
 }
 
 // Custom InputTypes

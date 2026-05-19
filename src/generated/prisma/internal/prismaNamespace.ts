@@ -872,7 +872,10 @@ export const UserScalarFieldEnum = {
   allowedRam: "allowedRam",
   allowedVms: "allowedVms",
   allowedCpus: "allowedCpus",
-  role: "role"
+  role: "role",
+  banned: "banned",
+  banReason: "banReason",
+  banExpires: "banExpires"
 } as const;
 
 export type UserScalarFieldEnum =
@@ -1018,22 +1021,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   "Int[]"
->;
-
-/**
- * Reference to a field of type 'Role'
- */
-export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  "Role"
->;
-
-/**
- * Reference to a field of type 'Role[]'
- */
-export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  "Role[]"
 >;
 
 /**

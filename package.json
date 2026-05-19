@@ -10,7 +10,7 @@
     "lint": "eslint",
     "prettier": "prettier --write .",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "prisma migrate dev && prisma generate",
     "prepare": "husky"
   },
   "dependencies": {
@@ -61,8 +61,8 @@
     "unrs-resolver"
   ],
   "lint-staged": {
-    "**/*.{ts,tsx,json,js,jsx}": [
-      "eslint --fix",
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix --max-warnings 0",
       "prettier --write"
     ]
   }

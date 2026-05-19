@@ -11,7 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-export default async function Page({ params }: { params: { vm: string } }) {
+export default async function Page({
+  params
+}: {
+  params: Promise<{ vm: string }>;
+}) {
   const { vm } = await params;
 
   const numberVm = parseInt(vm);

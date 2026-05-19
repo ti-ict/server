@@ -1,11 +1,10 @@
 "use server";
 
-import { headers } from "next/headers";
 import { createVmSchema } from "./schema";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { proxmoxClient, waitForTask } from "@/lib/proxmox";
 import { revalidatePath } from "next/cache";
+import { checkSession } from "@/lib/utils-server";
 
 export async function createVmAction(data: {
   hostname: string;
@@ -14,11 +13,9 @@ export async function createVmAction(data: {
 }): Promise<
   { success: false; error: string } | { success: true; vmId: number }
 > {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  });
+  const session = await checkSession();
 
-  if (!session) return { success: false, error: "Unauthorized" };
+  if (!session.success) return { success: false, error: "Unauthorized" };
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -36,14 +33,8 @@ export async function createVmAction(data: {
 
   const result = createVmSchema(user?.allowedRam, ramUsed).safeParse(data);
 
-  if (!result.success) {
-    console.error(result.error);
-    return { success: false, error: "Invalid form data" };
-  }
-
+  if (!result.success) return { success: false, error: "Invalid form data" };
   const { hostname, sshKey, ram } = result.data;
-
-  console.log(hostname, sshKey, ram);
 
   const newid = await prisma.vm
     .findFirst({

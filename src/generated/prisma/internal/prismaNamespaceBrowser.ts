@@ -88,7 +88,10 @@ export const UserScalarFieldEnum = {
   allowedRam: "allowedRam",
   allowedVms: "allowedVms",
   allowedCpus: "allowedCpus",
-  role: "role"
+  role: "role",
+  banned: "banned",
+  banReason: "banReason",
+  banExpires: "banExpires"
 } as const;
 
 export type UserScalarFieldEnum =

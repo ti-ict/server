@@ -10,7 +10,7 @@ export async function checkSession(): Promise<
     headers: await headers()
   });
 
-  if (!session) return { success: false, user: undefined };
+  if (!session?.user) return { success: false, user: undefined };
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },

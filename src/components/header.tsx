@@ -34,7 +34,7 @@ export async function Header() {
             Sign in
           </a>
         )}
-        {session?.user?.role === "ADMIN" && (
+        {session?.user?.role === "admin" && (
           <Link
             href="/admin"
             className={buttonVariants({ variant: "outline" })}
