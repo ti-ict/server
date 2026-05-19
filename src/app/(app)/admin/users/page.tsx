@@ -36,6 +36,7 @@ export default async function Page() {
         <H1>User Management</H1>
         <AddUserButton />
       </div>
+
       <Table className="mx-auto w-full max-w-4xl">
         <TableHeader>
           <TableRow>

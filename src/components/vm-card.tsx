@@ -17,7 +17,7 @@ export default function VMCard({ vm }: Props) {
     <Card>
       <CardHeader>
         <CardTitle>
-          <Link href={`/vm/${vm.id}`} className="hover:underline">
+          <Link href={`/vms/${vm.id}`} className="hover:underline">
             {vm.name}
           </Link>
         </CardTitle>

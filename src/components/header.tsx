@@ -5,21 +5,24 @@ import { checkSession } from "@/lib/utils-server";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import Crumbs from "./crumbs";
 
 export async function Header() {
   async function stopImpersonating() {
     "use server";
     await auth.api.stopImpersonating({ headers: await headers() });
-    redirect("/");
+    redirect("/vms");
   }
 
   const session = await checkSession();
   return (
-    <header className="flex w-full flex-row p-4">
+    <header className="flex w-full flex-row items-center gap-4 p-4">
       <Link href="/">
         <Logo />
       </Link>
+      <Crumbs />
       <div className="ml-auto flex items-center gap-4">
+        {/* @ts-expect-error this exists but isn't typed */}
         {session.session?.impersonatedBy && (
           <>
             <span className="text-sm text-muted-foreground">
@@ -35,7 +38,7 @@ export async function Header() {
         {session ? (
           <>
             <Link
-              href="/vm/create"
+              href="/vms/create"
               className={buttonVariants({ variant: "outline" })}
             >
               Create VM
