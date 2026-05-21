@@ -23,10 +23,10 @@ export async function Header() {
       <Crumbs />
       <div className="ml-auto flex items-center gap-4">
         {/* @ts-expect-error this exists but isn't typed */}
-        {session.session?.impersonatedBy && (
+        {session.data?.impersonatedBy && (
           <>
             <span className="text-sm text-muted-foreground">
-              Impersonating {session.user.name} ({session.user.email})
+              Impersonating {session.data.user.name} ({session.data.user.email})
             </span>
             <form action={stopImpersonating}>
               <Button variant="outline" type="submit">
@@ -35,7 +35,7 @@ export async function Header() {
             </form>
           </>
         )}
-        {session ? (
+        {session.data ? (
           <>
             <Link
               href="/vms/create"
@@ -58,7 +58,7 @@ export async function Header() {
             Sign in
           </a>
         )}
-        {session?.user?.role === "admin" && (
+        {session.data?.user.role === "admin" && (
           <Link
             href="/admin"
             className={buttonVariants({ variant: "outline" })}

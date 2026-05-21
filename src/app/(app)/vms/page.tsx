@@ -21,7 +21,7 @@ export default async function Page() {
 
   const vms = await prisma.vm.findMany({
     where: {
-      userId: session.user.id
+      userId: session.data.user.id
     }
   });
 

@@ -8,8 +8,8 @@ import { redirect } from "next/navigation";
 import { checkSession } from "@/lib/utils-server";
 
 export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
-  const { success, user } = await checkSession();
-  if (!success) redirect("/auth/signin");
+  const session = await checkSession();
+  if (!session.success) redirect("/auth/signin");
 
   const vm = await prisma.vm.findUnique({
     where: {
@@ -18,7 +18,7 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
   });
 
   if (!vm) throw new Error("VM not found");
-  if (vm.userId !== user.id) redirect("/");
+  if (vm.userId !== session.data.user.id) redirect("/");
 
   switch (action) {
     case "start":

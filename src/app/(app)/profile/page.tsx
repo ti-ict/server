@@ -11,8 +11,8 @@ export default async function Page() {
     <div className="flex w-full items-center justify-center">
       <div className="w-full max-w-sm rounded-lg p-6 sm:border sm:bg-popover">
         <EditProfileForm
-          name={session.user.name}
-          email={session.user.email}
+          name={session.data.user.name}
+          email={session.data.user.email}
           className="mb-4"
         />
 

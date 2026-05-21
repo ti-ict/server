@@ -11,7 +11,7 @@ export default async function Page({
 }) {
   const session = await checkSession();
   if (!session.success) redirect("/auth/signin");
-  if (session.user.role !== "admin") redirect("/");
+  if (session.data.user.role !== "admin") redirect("/");
 
   const { user } = await params;
 

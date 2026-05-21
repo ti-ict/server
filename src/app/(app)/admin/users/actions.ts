@@ -14,7 +14,7 @@ export async function addUserAction(data: {
 }): Promise<{ success: false; error: string } | { success: true }> {
   const session = await checkSession();
   if (!session.success) redirect("/auth/signin");
-  if (session.user.role !== "admin") redirect("/");
+  if (session.data.user.role !== "admin") redirect("/");
 
   const parsed = addUserSchema.safeParse(data);
 

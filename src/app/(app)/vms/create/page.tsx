@@ -7,11 +7,10 @@ import { checkSession } from "@/lib/utils-server";
 
 export default async function Page() {
   const session = await checkSession();
-
   if (!session.success) redirect("/auth/signin");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: session.data.user.id },
     include: {
       vms: true
     }

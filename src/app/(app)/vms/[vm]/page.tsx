@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import CopyButton from "@/components/copy-button";
+import { checkSession } from "@/lib/utils-server";
 
 export default async function Page({
   params
 }: {
   params: Promise<{ vm: string }>;
 }) {
+  const session = await checkSession();
+  if (!session.success) redirect("/auth/signin");
+
   const { vm } = await params;
 
   const numberVm = parseInt(vm);

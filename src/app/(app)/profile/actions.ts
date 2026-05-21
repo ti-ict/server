@@ -24,13 +24,13 @@ export async function editProfileAction(data: {
       select: { id: true }
     })
     .then((existingUser) => {
-      if (existingUser && existingUser.id !== session.user.id) {
+      if (existingUser && existingUser.id !== session.data.user.id) {
         return { success: false, error: "Email already in use" };
       }
     });
 
   await prisma.user.update({
-    where: { id: session.user.id },
+    where: { id: session.data.user.id },
     data: {
       name,
       email

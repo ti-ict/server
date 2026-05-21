@@ -18,7 +18,7 @@ export async function createVmAction(data: {
   if (!session.success) return { success: false, error: "Unauthorized" };
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: session.data.user.id },
     include: {
       vms: true
     }
