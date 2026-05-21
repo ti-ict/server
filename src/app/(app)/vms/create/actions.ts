@@ -112,7 +112,7 @@ export async function createVmAction(data: {
     return { success: false, error: "Failed to create VM" };
   }
 
-  revalidatePath(`/vm/${newid}`);
+  revalidatePath(`/vms/${newid}`);
 
   return { success: true, vmId: newid };
 }

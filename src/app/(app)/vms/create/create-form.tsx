@@ -45,7 +45,7 @@ export function CreateForm({
       //@ts-expect-error createVmAction returns a promise that resolves to an object with a success property, but the toast expects a promise that resolves to void, so we need to ignore this error
       createVmAction(data).then((result) => {
         if (!result.success) throw new Error(result.error);
-        router.push(`/vm/${result.vmId}`);
+        router.push(`/vms/${result.vmId}`);
         return result;
       }),
       {
