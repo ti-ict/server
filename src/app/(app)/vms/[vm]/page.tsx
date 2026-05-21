@@ -1,4 +1,4 @@
-import { H1 } from "@/components/typography";
+import { H1, H2 } from "@/components/typography";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import CopyButton from "@/components/copy-button";
 
 export default async function Page({
   params
@@ -30,8 +31,14 @@ export default async function Page({
 
   if (!dbVm) redirect("/");
 
+  const sshCommand = `ssh ${dbVm.username}@${dbVm.ip}`;
+
+  const sshConfig = `Host ${dbVm.name}
+    HostName ${dbVm.ip}
+    User ${dbVm.username}`;
+
   return (
-    <div className="px-20 md:min-w-full">
+    <div className="px-64 md:min-w-full">
       <div className="flex flex-row items-end gap-4">
         <H1>{dbVm.name}</H1>
         <span className="pb-1 text-muted-foreground">{dbVm.status}</span>
@@ -67,6 +74,65 @@ export default async function Page({
               />
             ))}
           </ButtonGroup>
+        </div>
+      </div>
+      <H2 className="mt-5">Details</H2>
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="rounded-md border p-4">
+          <h3 className="text-lg font-medium">RAM</h3>
+          <p className="text-muted-foreground">{dbVm.ram / 1024} GiB</p>
+        </div>
+        <div className="rounded-md border p-4">
+          <h3 className="text-lg font-medium">vCPUs</h3>
+          <p className="text-muted-foreground">{dbVm.cpu}</p>
+        </div>
+        <div className="rounded-md border p-4">
+          <h3 className="text-lg font-medium">Username</h3>
+          <div className="flex items-center">
+            <p className="text-muted-foreground">{dbVm.username}</p>{" "}
+            <CopyButton
+              variant="outline"
+              className="ml-auto text-muted-foreground"
+              size="icon-sm"
+              text={dbVm.username}
+            />
+          </div>
+        </div>
+        <div className="rounded-md border p-4">
+          <h3 className="text-lg font-medium">IP Address</h3>
+          <div className="flex items-center">
+            <p className="text-muted-foreground">{dbVm.ip}</p>{" "}
+            <CopyButton
+              variant="outline"
+              className="ml-auto text-muted-foreground"
+              size="icon-sm"
+              text={dbVm.ip}
+            />
+          </div>
+        </div>
+        <div className="hidden rounded-md border p-4 md:block">
+          <h3 className="text-lg font-medium">SSH Command</h3>
+          <div className="flex">
+            <pre className="text-muted-foreground">{sshCommand}</pre>
+            <CopyButton
+              variant="outline"
+              className="ml-auto text-muted-foreground"
+              size="icon-sm"
+              text={sshCommand}
+            />
+          </div>
+        </div>
+        <div className="hidden rounded-md border p-4 md:block">
+          <h3 className="text-lg font-medium">SSH Config</h3>
+          <div className="flex">
+            <pre className="text-muted-foreground">{sshConfig}</pre>
+            <CopyButton
+              variant="outline"
+              className="ml-auto text-muted-foreground"
+              size="icon-sm"
+              text={sshConfig}
+            />
+          </div>
         </div>
       </div>
     </div>
