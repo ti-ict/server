@@ -21,22 +21,29 @@ import { useRouter } from "next/navigation";
 export function CreateForm({
   allowedRam,
   ramUsed,
+  allowedCpus,
+  cpuUsed,
   className,
   ...props
 }: React.ComponentProps<"form"> & {
   allowedRam: number;
   ramUsed: number;
+  allowedCpus: number;
+  cpuUsed: number;
 }) {
   const router = useRouter();
 
   const form = useForm<z.infer<ReturnType<CreateVmSchema>>>({
     // @ts-expect-error number coercion is required for the RAM field, but the schema is typed to return a number, so we need to ignore this error
-    resolver: zodResolver(createVmSchema(allowedRam, ramUsed)),
+    resolver: zodResolver(
+      createVmSchema(allowedRam, ramUsed, allowedCpus, cpuUsed)
+    ),
     mode: "onBlur",
     defaultValues: {
       hostname: "",
       sshKey: "",
-      ram: 512
+      ram: 512,
+      cpu: allowedCpus - cpuUsed >= 4 ? 4 : 1
     }
   });
 
@@ -127,6 +134,30 @@ export function CreateForm({
                 value={[field.value]}
                 onValueChange={field.onChange}
                 name="ram"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="cpu"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-cpu">
+                <span>vCPUs</span>
+                <span className="ml-auto text-xs text-muted-foreground">
+                  {field.value} (Max: {allowedCpus - cpuUsed})
+                </span>
+              </FieldLabel>
+              <Slider
+                min={1}
+                max={allowedCpus - cpuUsed}
+                step={1}
+                value={[field.value]}
+                onValueChange={field.onChange}
+                name="cpu"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

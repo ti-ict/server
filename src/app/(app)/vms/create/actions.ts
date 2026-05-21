@@ -30,11 +30,20 @@ export async function createVmAction(data: {
   }
 
   const ramUsed = user?.vms.reduce((total, vm) => total + vm.ram, 0);
+  const cpuUsed = user?.vms.reduce((total, vm) => total + vm.cpu, 0);
 
-  const result = createVmSchema(user?.allowedRam, ramUsed).safeParse(data);
+  const result = createVmSchema(
+    user?.allowedRam,
+    ramUsed,
+    user?.allowedCpus,
+    cpuUsed
+  ).safeParse(data);
 
   if (!result.success) return { success: false, error: "Invalid form data" };
-  const { hostname, sshKey, ram } = result.data;
+  const { hostname, sshKey, ram, cpu } = result.data;
+
+  if (user.allowedRam - ramUsed < ram || user.allowedCpus - cpuUsed < cpu)
+    return { success: false, error: "Not enough resources available" };
 
   const newid = await prisma.vm
     .findFirst({
@@ -55,10 +64,11 @@ export async function createVmAction(data: {
         id: newid,
         name: hostname,
         ram,
+        cpu,
         ip,
         status: "provisioning",
         node: "proxmox-1",
-        username: "ubuntu",
+        username: "debian",
         userId: user.id
       }
     });
@@ -86,8 +96,8 @@ export async function createVmAction(data: {
       .qemu.$(newid)
       .config.$post({
         memory: ram.toString(),
-        ciuser: "ubuntu",
-        cipassword: "password",
+        cores: cpu,
+        ciuser: "debian",
         sshkeys: encodeURIComponent(sshKey.trim()),
         net0: "virtio,bridge=vmbr0,tag=30",
         ipconfig0: `ip=${ip}/22,gw=172.16.100.1`,

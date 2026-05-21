@@ -89,6 +89,7 @@ model Vm {
   status    String
   username  String
   ram       Int // in MB
+  cpu       Int      @default(4) // number of CPU cores
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

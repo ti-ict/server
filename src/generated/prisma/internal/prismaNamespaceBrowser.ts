@@ -152,6 +152,7 @@ export const VmScalarFieldEnum = {
   status: "status",
   username: "username",
   ram: "ram",
+  cpu: "cpu",
   createdAt: "createdAt",
   updatedAt: "updatedAt"
 } as const;

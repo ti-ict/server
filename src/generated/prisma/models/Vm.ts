@@ -28,11 +28,13 @@ export type AggregateVm = {
 export type VmAvgAggregateOutputType = {
   id: number | null;
   ram: number | null;
+  cpu: number | null;
 };
 
 export type VmSumAggregateOutputType = {
   id: number | null;
   ram: number | null;
+  cpu: number | null;
 };
 
 export type VmMinAggregateOutputType = {
@@ -44,6 +46,7 @@ export type VmMinAggregateOutputType = {
   status: string | null;
   username: string | null;
   ram: number | null;
+  cpu: number | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -57,6 +60,7 @@ export type VmMaxAggregateOutputType = {
   status: string | null;
   username: string | null;
   ram: number | null;
+  cpu: number | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -70,6 +74,7 @@ export type VmCountAggregateOutputType = {
   status: number;
   username: number;
   ram: number;
+  cpu: number;
   createdAt: number;
   updatedAt: number;
   _all: number;
@@ -78,11 +83,13 @@ export type VmCountAggregateOutputType = {
 export type VmAvgAggregateInputType = {
   id?: true;
   ram?: true;
+  cpu?: true;
 };
 
 export type VmSumAggregateInputType = {
   id?: true;
   ram?: true;
+  cpu?: true;
 };
 
 export type VmMinAggregateInputType = {
@@ -94,6 +101,7 @@ export type VmMinAggregateInputType = {
   status?: true;
   username?: true;
   ram?: true;
+  cpu?: true;
   createdAt?: true;
   updatedAt?: true;
 };
@@ -107,6 +115,7 @@ export type VmMaxAggregateInputType = {
   status?: true;
   username?: true;
   ram?: true;
+  cpu?: true;
   createdAt?: true;
   updatedAt?: true;
 };
@@ -120,6 +129,7 @@ export type VmCountAggregateInputType = {
   status?: true;
   username?: true;
   ram?: true;
+  cpu?: true;
   createdAt?: true;
   updatedAt?: true;
   _all?: true;
@@ -227,6 +237,7 @@ export type VmGroupByOutputType = {
   status: string;
   username: string;
   ram: number;
+  cpu: number;
   createdAt: Date;
   updatedAt: Date;
   _count: VmCountAggregateOutputType | null;
@@ -260,6 +271,7 @@ export type VmWhereInput = {
   status?: Prisma.StringFilter<"Vm"> | string;
   username?: Prisma.StringFilter<"Vm"> | string;
   ram?: Prisma.IntFilter<"Vm"> | number;
+  cpu?: Prisma.IntFilter<"Vm"> | number;
   createdAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -274,6 +286,7 @@ export type VmOrderByWithRelationInput = {
   status?: Prisma.SortOrder;
   username?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   user?: Prisma.UserOrderByWithRelationInput;
@@ -292,6 +305,7 @@ export type VmWhereUniqueInput = Prisma.AtLeast<
     status?: Prisma.StringFilter<"Vm"> | string;
     username?: Prisma.StringFilter<"Vm"> | string;
     ram?: Prisma.IntFilter<"Vm"> | number;
+    cpu?: Prisma.IntFilter<"Vm"> | number;
     createdAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -308,6 +322,7 @@ export type VmOrderByWithAggregationInput = {
   status?: Prisma.SortOrder;
   username?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   _count?: Prisma.VmCountOrderByAggregateInput;
@@ -333,6 +348,7 @@ export type VmScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"Vm"> | string;
   username?: Prisma.StringWithAggregatesFilter<"Vm"> | string;
   ram?: Prisma.IntWithAggregatesFilter<"Vm"> | number;
+  cpu?: Prisma.IntWithAggregatesFilter<"Vm"> | number;
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Vm"> | Date | string;
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Vm"> | Date | string;
 };
@@ -345,6 +361,7 @@ export type VmCreateInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   user: Prisma.UserCreateNestedOneWithoutVmsInput;
@@ -359,6 +376,7 @@ export type VmUncheckedCreateInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -371,6 +389,7 @@ export type VmUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   user?: Prisma.UserUpdateOneRequiredWithoutVmsNestedInput;
@@ -385,6 +404,7 @@ export type VmUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -398,6 +418,7 @@ export type VmCreateManyInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -410,6 +431,7 @@ export type VmUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -423,6 +445,7 @@ export type VmUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -446,6 +469,7 @@ export type VmCountOrderByAggregateInput = {
   status?: Prisma.SortOrder;
   username?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
@@ -453,6 +477,7 @@ export type VmCountOrderByAggregateInput = {
 export type VmAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
 };
 
 export type VmMaxOrderByAggregateInput = {
@@ -464,6 +489,7 @@ export type VmMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder;
   username?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
@@ -477,6 +503,7 @@ export type VmMinOrderByAggregateInput = {
   status?: Prisma.SortOrder;
   username?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
@@ -484,6 +511,7 @@ export type VmMinOrderByAggregateInput = {
 export type VmSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   ram?: Prisma.SortOrder;
+  cpu?: Prisma.SortOrder;
 };
 
 export type VmCreateNestedManyWithoutUserInput = {
@@ -580,6 +608,7 @@ export type VmCreateWithoutUserInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -592,6 +621,7 @@ export type VmUncheckedCreateWithoutUserInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -649,6 +679,7 @@ export type VmScalarWhereInput = {
   status?: Prisma.StringFilter<"Vm"> | string;
   username?: Prisma.StringFilter<"Vm"> | string;
   ram?: Prisma.IntFilter<"Vm"> | number;
+  cpu?: Prisma.IntFilter<"Vm"> | number;
   createdAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<"Vm"> | Date | string;
 };
@@ -661,6 +692,7 @@ export type VmCreateManyUserInput = {
   status: string;
   username: string;
   ram: number;
+  cpu?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -673,6 +705,7 @@ export type VmUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -685,6 +718,7 @@ export type VmUncheckedUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -697,6 +731,7 @@ export type VmUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string;
   username?: Prisma.StringFieldUpdateOperationsInput | string;
   ram?: Prisma.IntFieldUpdateOperationsInput | number;
+  cpu?: Prisma.IntFieldUpdateOperationsInput | number;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -714,6 +749,7 @@ export type VmSelect<
     status?: boolean;
     username?: boolean;
     ram?: boolean;
+    cpu?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -734,6 +770,7 @@ export type VmSelectCreateManyAndReturn<
     status?: boolean;
     username?: boolean;
     ram?: boolean;
+    cpu?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -754,6 +791,7 @@ export type VmSelectUpdateManyAndReturn<
     status?: boolean;
     username?: boolean;
     ram?: boolean;
+    cpu?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -770,6 +808,7 @@ export type VmSelectScalar = {
   status?: boolean;
   username?: boolean;
   ram?: boolean;
+  cpu?: boolean;
   createdAt?: boolean;
   updatedAt?: boolean;
 };
@@ -786,6 +825,7 @@ export type VmOmit<
   | "status"
   | "username"
   | "ram"
+  | "cpu"
   | "createdAt"
   | "updatedAt",
   ExtArgs["result"]["vm"]
@@ -827,6 +867,7 @@ export type $VmPayload<
       status: string;
       username: string;
       ram: number;
+      cpu: number;
       createdAt: Date;
       updatedAt: Date;
     },
@@ -1441,6 +1482,7 @@ export interface VmFieldRefs {
   readonly status: Prisma.FieldRef<"Vm", "String">;
   readonly username: Prisma.FieldRef<"Vm", "String">;
   readonly ram: Prisma.FieldRef<"Vm", "Int">;
+  readonly cpu: Prisma.FieldRef<"Vm", "Int">;
   readonly createdAt: Prisma.FieldRef<"Vm", "DateTime">;
   readonly updatedAt: Prisma.FieldRef<"Vm", "DateTime">;
 }

@@ -26,6 +26,7 @@ export default function VMCard({ vm }: Props) {
       <CardContent>
         <p>IP: {vm.ip}</p>
         <p>RAM: {vm.ram / 1024} GiB</p>
+        <p>vCPUs: {vm.cpu}</p>
       </CardContent>
     </Card>
   );

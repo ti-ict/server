@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Vm" ADD COLUMN     "cpu" INTEGER NOT NULL DEFAULT 4;
