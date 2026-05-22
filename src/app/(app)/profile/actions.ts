@@ -18,16 +18,13 @@ export async function editProfileAction(data: {
 
   const { name, email } = parsed.data;
 
-  await prisma.user
-    .findUnique({
-      where: { email },
-      select: { id: true }
-    })
-    .then((existingUser) => {
-      if (existingUser && existingUser.id !== session.data.user.id) {
-        return { success: false, error: "Email already in use" };
-      }
-    });
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true }
+  });
+
+  if (existingUser && existingUser.id !== session.data.user.id)
+    return { success: false, error: "Email already in use" };
 
   await prisma.user.update({
     where: { id: session.data.user.id },
