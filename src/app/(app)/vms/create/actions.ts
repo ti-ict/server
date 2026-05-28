@@ -83,7 +83,9 @@ export async function createVmAction(data: {
         storage: "local-lvm"
       });
 
-    await waitForTask("proxmox-1", cloneTask);
+    const cloneResult = await waitForTask("proxmox-1", cloneTask);
+
+    if (!cloneResult.success) throw new Error(cloneResult.error);
 
     await proxmoxClient.nodes.$("proxmox-1").qemu.$(newid).resize.$put({
       disk: "scsi0",

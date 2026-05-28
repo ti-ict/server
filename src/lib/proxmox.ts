@@ -25,12 +25,12 @@ export async function waitForTask(
 > {
   console.log("Waiting for task", taskId);
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 2000));
 
     const task = await proxmoxClient.nodes
       .$(node)
-      .tasks.$(taskId)
+      .tasks.$(encodeURIComponent(taskId))
       .status.$get();
 
     console.log(`Task status (${i}):`, task.status, task.exitstatus);

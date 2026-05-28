@@ -17,6 +17,7 @@ import { createVmAction } from "./actions";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function CreateForm({
   allowedRam,
@@ -32,6 +33,7 @@ export function CreateForm({
   cpuUsed: number;
 }) {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<ReturnType<CreateVmSchema>>>({
     // @ts-expect-error number coercion is required for the RAM field, but the schema is typed to return a number, so we need to ignore this error
@@ -48,19 +50,21 @@ export function CreateForm({
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    toast.promise(
-      //@ts-expect-error createVmAction returns a promise that resolves to an object with a success property, but the toast expects a promise that resolves to void, so we need to ignore this error
-      createVmAction(data).then((result) => {
-        if (!result.success) throw new Error(result.error);
-        router.push(`/vms/${result.vmId}`);
-        return result;
-      }),
-      {
-        loading: "Creating VM...",
-        success: "VM created!",
-        error: (err) => err?.message ?? "Failed to create VM"
-      }
-    );
+    setIsSubmitting(true);
+    const toastId = toast.loading("Creating VM...");
+    try {
+      // @ts-expect-error the action is typed to return a union type, but we know that it will return the success type if the form data is valid, which is guaranteed by the zod resolver, so we can ignore this error
+      const result = await createVmAction(data);
+      if (!result.success) throw new Error(result.error);
+      toast.success("VM created!", { id: toastId });
+      router.push(`/vms/${result.vmId}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to create VM", {
+        id: toastId
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   });
 
   return (
@@ -165,7 +169,10 @@ export function CreateForm({
         />
 
         <Field>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting || isSubmitting}
+          >
             Create VM
           </Button>
         </Field>
