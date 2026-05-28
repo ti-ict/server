@@ -38,7 +38,7 @@ export default async function Page() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Link href="/vm/create">
+          <Link href="/vms/create">
             <Button>Create your first VM</Button>
           </Link>
         </EmptyContent>

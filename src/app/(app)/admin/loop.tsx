@@ -13,5 +13,5 @@ export default function Loop() {
     return () => clearInterval(interval);
   }, [router]);
 
-  return <div></div>;
+  return null;
 }
