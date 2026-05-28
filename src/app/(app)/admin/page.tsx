@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { getSystemStats } from "@/lib/resource-monitor";
+import Loop from "./loop";
 
 export default async function Page() {
   const session = await checkSession();
@@ -41,7 +42,6 @@ export default async function Page() {
   return (
     <div className="p-6">
       <h1 className="mb-6 text-2xl font-bold">Admin Dashboard</h1>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader>
@@ -67,7 +67,7 @@ export default async function Page() {
             <div className="text-3xl font-semibold">{totalVms}</div>
           </CardContent>
           <CardFooter>
-            <Link href="/admin/vms" className={buttonVariants()}>
+            <Link href="/vms" className={buttonVariants()}>
               View VMs
             </Link>
           </CardFooter>
@@ -95,6 +95,7 @@ export default async function Page() {
             <div className="text-3xl font-semibold">{cpusUsed?.cpu ?? 0}</div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>System CPU</CardTitle>
@@ -104,6 +105,7 @@ export default async function Page() {
             <div className="text-3xl font-semibold">{systemCpu}%</div>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>System Memory</CardTitle>
@@ -116,6 +118,7 @@ export default async function Page() {
           </CardContent>
         </Card>
       </div>
+      <Loop />
     </div>
   );
 }
