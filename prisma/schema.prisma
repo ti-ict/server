@@ -18,8 +18,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   vms           Vm[]
-  allowedRam    Int       @default(8192) // in MB
-  allowedVms    Int       @default(5)
+  allowedRam    Int       @default(0) // in MB
   allowedCpus   Int       @default(4)
   role          String    @default("user")
   banned        Boolean?  @default(false)

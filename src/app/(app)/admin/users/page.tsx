@@ -23,7 +23,8 @@ export default async function Page() {
       id: true,
       email: true,
       role: true,
-      allowedRam: true
+      allowedRam: true,
+      allowedCpus: true
     },
     take: 100,
     orderBy: { role: "asc" }
@@ -41,6 +42,7 @@ export default async function Page() {
             <TableHead className="w-25">Email</TableHead>
             <TableHead>Role</TableHead>
             <TableHead className="text-right">Allowed RAM</TableHead>
+            <TableHead className="ml-auto text-right">Allowed vCPUs</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,6 +61,7 @@ export default async function Page() {
               <TableCell className="text-right">
                 {user.allowedRam / 1024} GiB
               </TableCell>
+              <TableCell className="text-right">{user.allowedCpus}</TableCell>
             </TableRow>
           ))}
         </TableBody>

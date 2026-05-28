@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 export async function editProfileAction(data: {
   name: string;
   allowedRam: number;
+  allowedCpus: number;
   id: string;
 }): Promise<{ success: false; error: string } | { success: true }> {
   const session = await checkSession();
@@ -19,13 +20,14 @@ export async function editProfileAction(data: {
 
   if (!parsed.success) return { success: false, error: "Invalid form data" };
 
-  const { name, allowedRam } = parsed.data;
+  const { name, allowedRam, allowedCpus } = parsed.data;
 
   await prisma.user.update({
     where: { id: data.id },
     data: {
       name,
-      allowedRam
+      allowedRam,
+      allowedCpus
     }
   });
 

@@ -30,7 +30,8 @@ export function EditProfileForm({
     mode: "onBlur",
     defaultValues: {
       name: user.name || "",
-      allowedRam: user.allowedRam
+      allowedRam: user.allowedRam,
+      allowedCpus: user.allowedCpus
     }
   });
 
@@ -98,6 +99,30 @@ export function EditProfileForm({
                 value={[field.value]}
                 onValueChange={field.onChange}
                 name="allowedRam"
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="allowedCpus"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-allowed-cpus">
+                <span>vCPUs</span>
+                <span className="ml-auto text-xs text-muted-foreground">
+                  {field.value} (Max: 16)
+                </span>
+              </FieldLabel>
+              <Slider
+                min={1}
+                max={16}
+                step={1}
+                value={[field.value]}
+                onValueChange={field.onChange}
+                name="allowedCpus"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
