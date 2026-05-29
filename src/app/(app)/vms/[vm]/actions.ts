@@ -18,7 +18,11 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
   });
 
   if (!vm) throw new Error("VM not found");
-  if (vm.userId !== session.data.user.id) redirect("/");
+  if (
+    (!vm || vm.userId !== session.data.user.id) &&
+    (!vm || session.data.user.role !== "admin")
+  )
+    redirect("/");
 
   switch (action) {
     case "start":

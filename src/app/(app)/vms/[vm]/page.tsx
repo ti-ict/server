@@ -33,7 +33,11 @@ export default async function Page({
     }
   });
 
-  if (!dbVm || dbVm.userId !== session.data.user.id) redirect("/");
+  if (
+    (!dbVm || dbVm.userId !== session.data.user.id) &&
+    (!dbVm || session.data.user.role !== "admin")
+  )
+    redirect("/");
 
   const sshCommand = `ssh ${dbVm.username}@${dbVm.ip}`;
 

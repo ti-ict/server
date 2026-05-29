@@ -67,7 +67,7 @@ export default async function Page() {
             <div className="text-3xl font-semibold">{totalVms}</div>
           </CardContent>
           <CardFooter>
-            <Link href="/vms" className={buttonVariants()}>
+            <Link href="/admin/vms" className={buttonVariants()}>
               View VMs
             </Link>
           </CardFooter>
