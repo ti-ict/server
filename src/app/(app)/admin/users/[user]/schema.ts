@@ -14,7 +14,10 @@ export const profileSchema = z.object({
     .number()
     .min(1, "vCPUs must be at least 1")
     .max(16, "You can only allocate up to 16 vCPUs.")
-    .refine((val) => Number.isInteger(val), "vCPUs must be an integer")
+    .refine((val) => Number.isInteger(val), "vCPUs must be an integer"),
+  role: z.enum(["user", "admin"], {
+    message: "Invalid role"
+  })
 });
 
 export type ProfileSchema = z.Infer<typeof profileSchema>;

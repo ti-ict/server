@@ -11,6 +11,7 @@ export async function editProfileAction(data: {
   allowedRam: number;
   allowedCpus: number;
   id: string;
+  role: string;
 }): Promise<{ success: false; error: string } | { success: true }> {
   const session = await checkSession();
   if (!session.success) redirect("/auth/signin");
@@ -20,14 +21,15 @@ export async function editProfileAction(data: {
 
   if (!parsed.success) return { success: false, error: "Invalid form data" };
 
-  const { name, allowedRam, allowedCpus } = parsed.data;
+  const { name, allowedRam, allowedCpus, role } = parsed.data;
 
   await prisma.user.update({
     where: { id: data.id },
     data: {
       name,
       allowedRam,
-      allowedCpus
+      allowedCpus,
+      role
     }
   });
 

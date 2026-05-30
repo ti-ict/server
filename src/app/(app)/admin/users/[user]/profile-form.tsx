@@ -16,6 +16,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Slider } from "@/components/ui/slider";
 import { editProfileAction } from "./actions";
 import { User } from "@/generated/prisma/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 export function EditProfileForm({
   user,
@@ -24,6 +31,9 @@ export function EditProfileForm({
 }: React.ComponentProps<"form"> & {
   user: User;
 }) {
+  const role =
+    user.role !== "admin" && user.role !== "user" ? "user" : user.role;
+
   const form = useForm<ProfileSchema>({
     //@ts-expect-error zod coercion
     resolver: zodResolver(profileSchema),
@@ -31,7 +41,8 @@ export function EditProfileForm({
     defaultValues: {
       name: user.name || "",
       allowedRam: user.allowedRam,
-      allowedCpus: user.allowedCpus
+      allowedCpus: user.allowedCpus,
+      role
     }
   });
 
@@ -124,6 +135,34 @@ export function EditProfileForm({
                 onValueChange={field.onChange}
                 name="allowedCpus"
               />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="role"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-role">
+                <span>Role</span>
+              </FieldLabel>
+              <Select
+                onValueChange={(value) => field.onChange(value)}
+                defaultValue={field.value}
+              >
+                <SelectTrigger>
+                  <SelectValue
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Select a role"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
