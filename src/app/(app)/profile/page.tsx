@@ -10,7 +10,7 @@ export default async function Page() {
   return (
     <div className="flex w-full items-center justify-center">
       <div className="w-full max-w-sm rounded-lg p-6 sm:border sm:bg-popover">
-        <EditProfileForm name={session.data.user.name} className="mb-4" />
+        <EditProfileForm userId={session.data.user.id} className="mb-4" />
 
         <ClientButtons />
       </div>

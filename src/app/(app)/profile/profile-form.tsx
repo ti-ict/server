@@ -1,85 +1,59 @@
-"use client";
-
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Controller, useForm } from "react-hook-form";
-import { profileSchema, ProfileSchema } from "./schema";
-import { editProfileAction } from "./actions";
-import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { H3 } from "@/components/typography";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export function EditProfileForm({
-  name,
+export async function EditProfileForm({
+  userId,
   className,
   ...props
 }: React.ComponentProps<"form"> & {
-  name: string;
+  userId: string;
 }) {
-  const form = useForm<ProfileSchema>({
-    resolver: zodResolver(profileSchema),
-    mode: "onBlur",
-    defaultValues: {
-      name: name ?? ""
-    }
-  });
-
-  const onSubmit = form.handleSubmit(async (data) => {
-    toast.promise(
-      editProfileAction(data).then((result) => {
-        if (!result.success) throw new Error(result.error);
-        return result;
-      }),
-      {
-        loading: "Updating...",
-        success: "Profile updated!",
-        error: (err) => err?.message ?? "Failed to update profile"
-      }
-    );
-  });
+  const dbUser = await prisma.user.findUnique({ where: { id: userId } });
+  if (!dbUser) return redirect("/auth/signin");
 
   return (
-    <form
-      className={cn("flex flex-col gap-6", className)}
-      {...props}
-      onSubmit={onSubmit}
-    >
+    <form className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Edit Profile</h1>
+          <h1 className="text-2xl font-bold">View Profile</h1>
           <p className="text-sm text-balance text-muted-foreground">
-            Update your profile information below
+            View your profile information
           </p>
         </div>
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-rhf-demo-name">Name</FieldLabel>
-              <Input
-                {...field}
-                id="form-rhf-demo-name"
-                aria-invalid={fieldState.invalid}
-                placeholder="John Doe"
-                autoComplete="off"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
 
         <Field>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            Save Changes
-          </Button>
+          <FieldLabel htmlFor="form-rhf-demo-name">Name</FieldLabel>
+          <Input
+            id="form-rhf-demo-name"
+            placeholder="John Doe"
+            autoComplete="off"
+            value={dbUser.name}
+            readOnly
+            disabled
+          />
         </Field>
+
+        <Field>
+          <FieldLabel htmlFor="form-rhf-demo-email">Email</FieldLabel>
+          <Input
+            id="form-rhf-demo-email"
+            placeholder="a@donboscosdw.be"
+            autoComplete="off"
+            value={dbUser.email}
+            readOnly
+            disabled
+          />
+        </Field>
+
+        <div>
+          <H3 className="mt-4 mb-2">Limits</H3>
+          <p>RAM: {dbUser.allowedRam / 1024} GiB</p>
+          <p>vCPU: {dbUser.allowedCpus}</p>
+        </div>
       </FieldGroup>
     </form>
   );
