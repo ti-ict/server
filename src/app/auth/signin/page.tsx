@@ -6,14 +6,14 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
 export default function LoginPage() {
-  async function handleGitHubSignIn() {
+  async function handleMicorsoftSignIn() {
     const { error } = await authClient.signIn.social({
-      provider: "github"
+      provider: "microsoft"
     });
 
     if (error) {
-      toast.error("Failed to sign in with GitHub");
-      console.error("GitHub sign-in error:", error);
+      toast.error("Failed to sign in with Microsoft");
+      console.error("Microsoft sign-in error:", error);
     }
   }
   return (
@@ -28,9 +28,9 @@ export default function LoginPage() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={handleGitHubSignIn}
+            onClick={handleMicorsoftSignIn}
           >
-            Sign in with GitHub
+            Sign in with Microsoft
           </Button>
         </CardContent>
       </Card>
