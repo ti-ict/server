@@ -16,7 +16,7 @@ type Props = {
 
 export default async function VMCard({ vm, ownerName }: Props) {
   return (
-    <Card>
+    <Card className="max-w-64 min-w-64">
       <CardHeader>
         <CardTitle>
           <Link href={`/vms/${vm.id}`} className="hover:underline">
