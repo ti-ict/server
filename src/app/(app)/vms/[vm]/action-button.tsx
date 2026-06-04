@@ -14,14 +14,17 @@ export function ActionButton({
   vmAction,
   vmid,
   node,
+  shared,
   mobile = false
 }: {
   vmAction: VmAction;
   vmid: number;
   node: string;
+  shared: boolean;
   mobile?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
+  if (shared && vmAction.notShowWhenShared) return null;
 
   async function handleStart() {
     setLoading(true);

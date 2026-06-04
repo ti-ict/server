@@ -19,11 +19,29 @@ export default async function Page() {
 
   if (!session.success) redirect("/auth/signin");
 
-  const vms = await prisma.vm.findMany({
+  const ownVms = await prisma.vm.findMany({
     where: {
       userId: session.data.user.id
     }
   });
+
+  const sharedVms = await prisma.sharedVm.findMany({
+    where: {
+      userId: session.data.user.id,
+      accepted: true // only accepted shares, remove if you want pending too
+    },
+    include: {
+      vm: { include: { user: true } }
+    }
+  });
+
+  const vms = [
+    ...ownVms,
+    ...sharedVms.map((share) => ({
+      ...share.vm,
+      ownerName: share.vm.user.name
+    }))
+  ];
 
   if (vms.length === 0)
     return (

@@ -18,7 +18,7 @@ export default async function Page({
     }
   });
 
-  if (!sharedVm) redirect("/vms?error=Invalid+accept+id");
+  if (!sharedVm) redirect("/vms?error=This+invite+does+not+exist");
   if (sharedVm.accepted) redirect("/vms?error=VM+already+accepted");
   if (sharedVm.userId !== session.data.user.id)
     redirect("/vms?error=You+are+not+authorized+to+accept+this+VM");

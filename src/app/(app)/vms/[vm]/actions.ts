@@ -5,7 +5,7 @@ import { shareSchema, type Key, type ShareSchema } from "./schema";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { checkSession } from "@/lib/utils-server";
+import { checkSession, resolveVm } from "@/lib/utils-server";
 import { ShareVMTemplate } from "@/components/email/share-vm";
 import { resend } from "@/lib/resend";
 
@@ -13,18 +13,9 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
   const session = await checkSession();
   if (!session.success) redirect("/auth/signin");
 
-  const vm = await prisma.vm.findUnique({
-    where: {
-      id: vmid
-    }
-  });
+  const vm = await resolveVm(vmid, session.data.user);
 
   if (!vm) throw new Error("VM not found");
-  if (
-    (!vm || vm.userId !== session.data.user.id) &&
-    (!vm || session.data.user.role !== "admin")
-  )
-    redirect("/");
 
   switch (action) {
     case "start":
@@ -96,6 +87,7 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
       revalidatePath(`/vm/${vmid}`);
       return waitedStop;
     case "terminate":
+      if (vm.shared) throw new Error("Cannot terminate a shared VM");
       const terminateStopResult = await proxmoxClient.nodes
         .$(node)
         .qemu.$(vmid)
@@ -148,30 +140,28 @@ export async function inviteAction(
         "This user is not part of the organization and cannot be shared with"
     };
 
-  const user = await prisma.user.findUnique({
+  const invitedUser = await prisma.user.findUnique({
     where: { email }
   });
 
-  if (!user) return { success: false, error: "User not found" };
-  if (user.id === session.data.user.id)
+  if (!invitedUser) return { success: false, error: "User not found" };
+
+  const vm = await resolveVm(data.vmId, session.data.user, { noShared: true });
+
+  if (!vm)
+    return { success: false, error: "You aren't allowed to share this VM" };
+
+  // prevent sharing with yourself, admins can share other's vms with themselves
+  if (
+    invitedUser.id === session.data.user.id &&
+    vm.userId === session.data.user.id
+  )
     return { success: false, error: "You cannot share a VM with yourself" };
-
-  const vm = await prisma.vm.findUnique({
-    where: { id: data.vmId }
-  });
-
-  if (!vm) return { success: false, error: "VM not found" };
-
-  if (vm.userId !== session.data.user.id && session.data.user.role !== "admin")
-    return {
-      success: false,
-      error: "You do not have permission to share this VM"
-    };
 
   const { id: sharedVmId } = await prisma.sharedVm.create({
     data: {
       vmId: data.vmId,
-      userId: user.id
+      userId: invitedUser.id
     }
   });
 
@@ -181,7 +171,7 @@ export async function inviteAction(
       to: [email],
       subject: "You've been invited to access a VM",
       react: ShareVMTemplate({
-        name: user.name,
+        name: invitedUser.name,
         sharedBy: session.data.user.name,
         vmName: vm.name,
         acceptId: sharedVmId

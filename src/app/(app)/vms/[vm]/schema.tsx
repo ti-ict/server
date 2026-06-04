@@ -7,6 +7,7 @@ export const vmActions: {
   happening: string;
   completed: string;
   popOver?: boolean;
+  notShowWhenShared?: boolean;
 }[] = [
   {
     key: "start",
@@ -37,7 +38,8 @@ export const vmActions: {
     icon: <Trash />,
     happening: "terminating",
     completed: "terminated",
-    popOver: true
+    popOver: true,
+    notShowWhenShared: true
   }
 ] as const;
 

@@ -8,9 +8,11 @@ import {
   CardFooter
 } from "./ui/card";
 import Link from "next/link";
+import { Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type Props = {
-  vm: Vm;
+  vm: Vm & { ownerName?: string };
   ownerName?: string;
 };
 
@@ -19,9 +21,25 @@ export default async function VMCard({ vm, ownerName }: Props) {
     <Card className="max-w-64 min-w-64">
       <CardHeader>
         <CardTitle>
-          <Link href={`/vms/${vm.id}`} className="hover:underline">
-            {vm.name}
-          </Link>
+          <span className="flex flex-row items-center gap-2">
+            <Link href={`/vms/${vm.id}`} className="hover:underline">
+              {vm.name}
+            </Link>
+            {vm.ownerName && (
+              <Tooltip>
+                <TooltipContent>
+                  <p>Shared by {vm.ownerName}</p>
+                </TooltipContent>
+                <TooltipTrigger asChild>
+                  <Info
+                    className="text-sm text-muted-foreground"
+                    width={16}
+                    height={16}
+                  />
+                </TooltipTrigger>
+              </Tooltip>
+            )}
+          </span>
         </CardTitle>
         <CardDescription>{vm.status}</CardDescription>
       </CardHeader>
