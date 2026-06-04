@@ -168,11 +168,10 @@ export async function inviteAction(
       error: "You do not have permission to share this VM"
     };
 
-  const { id: sharedVmId } = await prisma.sharedVms.create({
+  const { id: sharedVmId } = await prisma.sharedVm.create({
     data: {
       vmId: data.vmId,
-      userId: user.id,
-      sharedById: session.data.user.id
+      userId: user.id
     }
   });
 

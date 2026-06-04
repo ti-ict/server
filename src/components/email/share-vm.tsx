@@ -14,7 +14,7 @@ export function ShareVMTemplate({ name, sharedBy, vmName, acceptId }: Props) {
       </p>
       <p>
         Accept the invite here:{" "}
-        <a href={`${process.env.BETTER_AUTH_URL}/vm/accept/${acceptId}`}>
+        <a href={`${process.env.BETTER_AUTH_URL}/vms/accept/${acceptId}`}>
           Accept
         </a>
       </p>

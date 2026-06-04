@@ -8,23 +8,23 @@ datasource db {
 }
 
 model User {
-  id            String      @id
+  id            String     @id
   name          String
   email         String
-  emailVerified Boolean     @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
   vms           Vm[]
-  allowedRam    Int         @default(0) // in MB
-  allowedCpus   Int         @default(4)
-  role          String      @default("user")
-  banned        Boolean?    @default(false)
+  allowedRam    Int        @default(0) // in MB
+  allowedCpus   Int        @default(4)
+  role          String     @default("user")
+  banned        Boolean?   @default(false)
   banReason     String?
   banExpires    DateTime?
-  sharedVms     SharedVms[]
+  Vms           SharedVm[]
 
   @@unique([email])
   @@map("user")
@@ -80,22 +80,22 @@ model Verification {
 }
 
 model Vm {
-  id        Int         @id
+  id        Int        @id
   name      String
   node      String
   userId    String
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   ip        String
   status    String
   username  String
   ram       Int // in MB
-  cpu       Int         @default(4) // number of CPU cores
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  sharedVms SharedVms[]
+  cpu       Int        @default(4) // number of CPU cores
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  sharedVms SharedVm[]
 }
 
-model SharedVms {
+model SharedVm {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

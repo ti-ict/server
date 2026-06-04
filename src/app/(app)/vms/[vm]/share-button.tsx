@@ -43,7 +43,7 @@ export default function ShareButton({
 
   const onSubmit = form.handleSubmit(async (data) => {
     setIsSubmitting(true);
-    const toastId = toast.loading("Submitting...");
+    const toastId = toast.loading("Sending invite...");
     try {
       const result = await inviteAction({ ...data, vmId });
       if (!result.success) throw new Error(result.error);
