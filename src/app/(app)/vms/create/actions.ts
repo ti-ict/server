@@ -100,7 +100,8 @@ export async function createVmAction(
         sshkeys: encodeURIComponent(sshKey.trim()),
         net0: "virtio,bridge=vmbr0,tag=30",
         ipconfig0: `ip=${ip}/22,gw=172.16.100.1`,
-        agent: "enabled=1"
+        agent: "enabled=1",
+        onboot: true
       });
 
     // 4. start
