@@ -47,7 +47,8 @@ export const shareSchema = z.object({
   email: z
     .email()
     .min(1, "Email is required")
-    .max(255, "Email must be less than 255 characters")
+    .max(255, "Email must be less than 255 characters"),
+  allowActions: z.boolean().optional()
 });
 
 export type VmAction = (typeof vmActions)[number];

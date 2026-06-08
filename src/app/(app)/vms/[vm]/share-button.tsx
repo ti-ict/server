@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { inviteAction } from "./actions";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ShareButton({
   vmId,
@@ -85,6 +86,30 @@ export default function ShareButton({
                       aria-invalid={fieldState.invalid}
                       placeholder={`name@${domain}`}
                       autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="allowActions"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    orientation="horizontal"
+                  >
+                    <FieldLabel htmlFor="allowActions">
+                      Allow Start/Stop
+                    </FieldLabel>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="allowActions"
+                      aria-invalid={fieldState.invalid}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />

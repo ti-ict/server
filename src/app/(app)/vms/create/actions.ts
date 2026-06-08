@@ -119,6 +119,7 @@ export async function createVmAction(
     await prisma.vm.delete({
       where: { id: newid }
     });
+
     return { success: false, error: "Failed to create VM" };
   }
 

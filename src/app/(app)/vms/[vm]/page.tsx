@@ -47,13 +47,31 @@ export default async function Page({
         <H1>{vm.name}</H1>
         <span className="pb-1 text-muted-foreground">{vm.status}</span>
         <div className="ml-auto flex items-center gap-4">
-          {/* Mobile */}
-          <div className="flex md:hidden">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">Actions</Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+          {vm.allowActions && (
+            <>
+              {/* Mobile */}
+              <div className="flex md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Actions</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {vmActions.map((action) => (
+                      <ActionButton
+                        key={action.key}
+                        vmAction={action}
+                        vmid={vm.id}
+                        node={vm.node}
+                        shared={vm.shared}
+                        mobile
+                      />
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Desktop */}
+              <ButtonGroup className="hidden md:flex">
                 {vmActions.map((action) => (
                   <ActionButton
                     key={action.key}
@@ -61,25 +79,11 @@ export default async function Page({
                     vmid={vm.id}
                     node={vm.node}
                     shared={vm.shared}
-                    mobile
                   />
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {/* Desktop */}
-          <ButtonGroup className="hidden md:flex">
-            {vmActions.map((action) => (
-              <ActionButton
-                key={action.key}
-                vmAction={action}
-                vmid={vm.id}
-                node={vm.node}
-                shared={vm.shared}
-              />
-            ))}
-          </ButtonGroup>
+              </ButtonGroup>
+            </>
+          )}
         </div>
       </div>
       <H2 className="mt-5 flex w-full flex-row items-center gap-4">

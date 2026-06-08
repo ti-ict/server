@@ -25,7 +25,7 @@ export async function resolveVm(
   vmId: number,
   user: { id: string; role?: string | null },
   options?: { noShared?: boolean; onlyAdmin?: boolean }
-): Promise<(Vm & { shared: boolean }) | null> {
+): Promise<(Vm & { shared: boolean; allowActions: boolean }) | null> {
   if (options?.onlyAdmin && user.role !== "admin") return null;
 
   if (user.role === "admin") {
@@ -40,14 +40,14 @@ export async function resolveVm(
     });
     if (!vm) return null;
     const { sharedVms, ...rest } = vm;
-    return { ...rest, shared: sharedVms.length > 0 };
+    return { ...rest, shared: sharedVms.length > 0, allowActions: true };
   }
 
   if (options?.noShared) {
     const vm = await prisma.vm.findFirst({
       where: { id: vmId, userId: user.id }
     });
-    return vm ? { ...vm, shared: false } : null;
+    return vm ? { ...vm, shared: false, allowActions: true } : null;
   }
 
   const vm = await prisma.vm.findFirst({
@@ -68,5 +68,10 @@ export async function resolveVm(
 
   if (!vm) return null;
   const { sharedVms, ...rest } = vm;
-  return { ...rest, shared: sharedVms.length > 0 };
+  const isOwner = vm.userId === user.id;
+  return {
+    ...rest,
+    shared: sharedVms.length > 0,
+    allowActions: isOwner ? true : sharedVms[0]?.allowActions
+  };
 }
