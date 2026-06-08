@@ -53,9 +53,34 @@ export async function createVmAction(
     })
     .then((vm) => (vm ? vm.id + 1 : 100));
 
-  try {
-    const ip = `172.16.100.${newid}`;
+  const usedIps = new Set(
+    (
+      await prisma.vm.findMany({
+        select: { ip: true }
+      })
+    )
+      .map((vm) => vm.ip)
+      .filter(Boolean)
+  );
 
+  let ip: string | null = null;
+  for (let third = 100; third <= 103 && !ip; third++) {
+    for (let fourth = 2; fourth <= 254 && !ip; fourth++) {
+      const candidate = `172.16.${third}.${fourth}`;
+      if (!usedIps.has(candidate)) {
+        ip = candidate;
+      }
+    }
+  }
+
+  if (!ip) {
+    return {
+      success: false,
+      error: "No available IPs in range 172.16.100.2-172.16.103.254"
+    };
+  }
+
+  try {
     await prisma.vm.create({
       data: {
         id: newid,
