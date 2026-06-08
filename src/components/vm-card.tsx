@@ -21,7 +21,7 @@ export default async function VMCard({ vm, ownerName }: Props) {
     <Card className="max-w-64 min-w-64">
       <CardHeader>
         <CardTitle>
-          <span className="flex flex-row items-center gap-2">
+          <span className="flex- flex flex-row items-center gap-2">
             <Link href={`/vms/${vm.id}`} className="hover:underline">
               {vm.name}
             </Link>
