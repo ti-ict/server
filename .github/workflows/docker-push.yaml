@@ -61,3 +61,5 @@ jobs:
           # Use --no-cache when pushing to the main branch for fresh builds
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            GIT_COMMIT_SHA=${{ github.sha }}

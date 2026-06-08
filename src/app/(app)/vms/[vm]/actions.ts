@@ -16,7 +16,8 @@ export async function proxmoxVmAction(vmid: number, node: string, action: Key) {
   const vm = await resolveVm(vmid, session.data.user);
 
   if (!vm) throw new Error("VM not found");
-  if (!vm.allowActions) throw new Error("Action not allowed");
+  if (vm.userId !== session.data.user.id && !vm.allowActions)
+    throw new Error("Action not allowed");
 
   if (vm.shared)
     switch (action) {

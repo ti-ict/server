@@ -39,86 +39,95 @@ export default async function Page() {
 
   const { cpu: systemCpu, memory: systemMemory } = await getSystemStats();
 
+  const buildDate = process.env.BUILD_DATE
+    ? new Date(process.env.BUILD_DATE).toLocaleString()
+    : "unknown";
+
   return (
-    <div className="p-6">
+    <div className="flex min-h-screen flex-col p-6">
       <h1 className="mb-6 text-2xl font-bold">Admin Dashboard</h1>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Users</CardTitle>
-            <CardDescription>Active users</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">{totalUsers}</div>
-          </CardContent>
-          <CardFooter>
-            <Link href="/admin/users" className={buttonVariants()}>
-              View Users
-            </Link>
-          </CardFooter>
-        </Card>
+      <div className="flex-grow">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle>Total Users</CardTitle>
+              <CardDescription>Active users</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">{totalUsers}</div>
+            </CardContent>
+            <CardFooter>
+              <Link href="/admin/users" className={buttonVariants()}>
+                View Users
+              </Link>
+            </CardFooter>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Total VMs</CardTitle>
-            <CardDescription>Virtual machines</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">{totalVms}</div>
-          </CardContent>
-          <CardFooter>
-            <Link href="/admin/vms" className={buttonVariants()}>
-              View VMs
-            </Link>
-          </CardFooter>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Total VMs</CardTitle>
+              <CardDescription>Virtual machines</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">{totalVms}</div>
+            </CardContent>
+            <CardFooter>
+              <Link href="/admin/vms" className={buttonVariants()}>
+                View VMs
+              </Link>
+            </CardFooter>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>RAM Used</CardTitle>
-            <CardDescription>Total allocated RAM</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">{ramGiB} GiB</div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              {ramMiB} MiB
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>RAM Used</CardTitle>
+              <CardDescription>Total allocated RAM</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">{ramGiB} GiB</div>
+              <div className="mt-1 text-sm text-muted-foreground">
+                {ramMiB} MiB
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>vCPUs Used</CardTitle>
-            <CardDescription>Total used vCPUs</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">{cpusUsed?.cpu ?? 0}</div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>vCPUs Used</CardTitle>
+              <CardDescription>Total used vCPUs</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">{cpusUsed?.cpu ?? 0}</div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>System CPU</CardTitle>
-            <CardDescription>Current system CPU usage</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">{systemCpu}%</div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>System CPU</CardTitle>
+              <CardDescription>Current system CPU usage</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">{systemCpu}%</div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>System Memory</CardTitle>
-            <CardDescription>Current system memory usage</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-semibold">
-              {systemMemory.percent}%
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>System Memory</CardTitle>
+              <CardDescription>Current system memory usage</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold">
+                {systemMemory.percent}%
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <Loop />
       </div>
-      <Loop />
+      <footer className="p-4 text-center text-sm text-muted-foreground">
+        Git Commit: {process.env.GIT_COMMIT_SHA}, built on: {buildDate}
+      </footer>
     </div>
   );
 }
