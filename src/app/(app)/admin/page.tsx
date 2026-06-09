@@ -125,7 +125,7 @@ export default async function Page() {
         </div>
         <Loop />
       </div>
-      <footer className="p-4 text-center text-sm text-muted-foreground">
+      <footer className="mt-auto p-4 text-center text-sm text-muted-foreground">
         Git Commit: {process.env.GIT_COMMIT_SHA}, built on: {buildDate}
       </footer>
     </div>
