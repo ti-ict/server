@@ -52,9 +52,9 @@ export default async function Page({
               {/* Mobile */}
               <div className="flex md:hidden">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">Actions</Button>
-                  </DropdownMenuTrigger>
+                  <DropdownMenuTrigger
+                    render={<Button variant="outline">Actions</Button>}
+                  ></DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     {vmActions.map((action) => (
                       <ActionButton

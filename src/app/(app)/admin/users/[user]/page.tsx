@@ -26,10 +26,7 @@ export default async function Page({
       <div className="w-full max-w-sm rounded-lg p-6 sm:border sm:bg-popover">
         <EditProfileForm user={dbUser} className="mb-4" />
 
-        <ClientButtons
-          userId={dbUser.id}
-          allowImpersonate={dbUser.role !== "admin"}
-        />
+        <ClientButtons userId={dbUser.id} />
       </div>
     </div>
   );

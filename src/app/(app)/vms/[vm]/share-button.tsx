@@ -60,11 +60,13 @@ export default function ShareButton({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="ml-auto" variant="outline" size="icon">
-          <Share />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button className="ml-auto" variant="outline" size="icon">
+            <Share />
+          </Button>
+        }
+      ></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Share VM</DialogTitle>

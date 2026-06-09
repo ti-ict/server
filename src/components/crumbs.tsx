@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "./ui/breadcrumb";
+import Link from "next/link";
 
 const labels: Record<string, string[]> = {
   admin: ["Admin"],
@@ -18,12 +18,14 @@ const labels: Record<string, string[]> = {
   profile: ["Profile"]
 };
 
-export default function Crumbs() {
+export default function Crumbs({
+  ...props
+}: React.ComponentProps<typeof Breadcrumb>) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <Breadcrumb>
+    <Breadcrumb {...props}>
       <BreadcrumbList>
         {segments.map((segment, index) => {
           const href = "/" + segments.slice(0, index + 1).join("/");
@@ -38,7 +40,7 @@ export default function Crumbs() {
                 {isLast ? (
                   <BreadcrumbPage>{label}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink href={href}>{label}</BreadcrumbLink>
+                  <Link href={href}>{label}</Link>
                 )}
               </BreadcrumbItem>
               {!isLast && <BreadcrumbSeparator />}

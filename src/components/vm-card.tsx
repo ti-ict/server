@@ -30,13 +30,15 @@ export default async function VMCard({ vm, ownerName }: Props) {
                 <TooltipContent>
                   <p>Shared by {vm.ownerName}</p>
                 </TooltipContent>
-                <TooltipTrigger asChild>
-                  <Info
-                    className="text-sm text-muted-foreground"
-                    width={16}
-                    height={16}
-                  />
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <Info
+                      className="text-sm text-muted-foreground"
+                      width={16}
+                      height={16}
+                    />
+                  }
+                ></TooltipTrigger>
               </Tooltip>
             )}
           </span>

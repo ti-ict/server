@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
-import type { Popover as PopoverPrimitive } from "radix-ui";
+import type { Popover as PopoverPrimitive } from "@base-ui/react";
 
 export default function PopoverWarning({
   children,
@@ -12,7 +12,7 @@ export default function PopoverWarning({
 }) {
   return (
     <Popover {...props}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger>{children}</PopoverTrigger>
       <PopoverContent className="w-32">
         <Button variant="destructive" onClick={action} className="w-full">
           Are you sure?
