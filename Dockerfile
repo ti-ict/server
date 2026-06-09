@@ -3,7 +3,7 @@
 # ============================================
 FROM oven/bun:alpine AS dependencies
 WORKDIR /app
-COPY package.json package-lock.json* ./
+COPY package.json bun.lock ./
 RUN --mount=type=cache,target=/root/.npm \
     bun install --frozen-lockfile
 
