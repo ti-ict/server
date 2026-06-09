@@ -1,16 +1,16 @@
 # ============================================
 # Stage 1: Dependencies Installation Stage
 # ============================================
-FROM node:26-alpine AS dependencies
+FROM oven/bun:alpine AS dependencies
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+    bun install --frozen-lockfile
 
 # ============================================
 # Stage 2: Build Next.js application in standalone mode
 # ============================================
-FROM node:26-alpine AS builder
+FROM oven/bun:alpine AS builder
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
@@ -18,8 +18,8 @@ ARG GIT_COMMIT_SHA
 ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run db:generate
-RUN npm run build
+RUN bun run db:generate
+RUN bun run build
 
 # ============================================
 # Stage 3: Run Next.js application
