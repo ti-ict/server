@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { TopLoader } from "@/components/toploader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -52,6 +53,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <TopLoader />
             {children} <Toaster />
           </ThemeProvider>
         </TooltipProvider>
