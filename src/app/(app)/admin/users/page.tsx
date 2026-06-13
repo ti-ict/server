@@ -14,25 +14,37 @@ import { cap } from "@/lib/utils";
 import { checkSession } from "@/lib/utils-server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Search, X } from "lucide-react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput
+} from "@/components/ui/input-group";
 
 export default async function Page({
   searchParams
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, search: searchParam } = await searchParams;
   const page = parseInt(pageParam || "1", 10) || 1;
   const pageSize = 10;
+  const search = searchParam?.trim() || undefined;
 
   const session = await checkSession();
   if (!session.success) redirect("/auth/signin");
   if (session.data.user.role !== "admin") redirect("/");
 
-  const totalUsers = await prisma.user.count();
+  const where = search
+    ? { email: { contains: search, mode: "insensitive" as const } }
+    : {};
+
+  const totalUsers = await prisma.user.count({ where });
   const totalPages = Math.ceil(totalUsers / pageSize) || 1;
   const currentPage = Math.max(1, Math.min(page, totalPages));
 
   const users = await prisma.user.findMany({
+    where,
     select: {
       id: true,
       email: true,
@@ -50,6 +62,43 @@ export default async function Page({
       <div className="relative flex w-full max-w-4xl items-center justify-center">
         <H1>User Management</H1>
       </div>
+
+      {/* Search */}
+      <form
+        method="get"
+        action="/admin/users"
+        className="flex w-full max-w-4xl items-center gap-2"
+      >
+        <div className="relative flex-1">
+          <InputGroup>
+            <InputGroupInput
+              name="search"
+              type="search"
+              placeholder="Search by email..."
+              defaultValue={search}
+            />
+            <InputGroupAddon align="inline-end">
+              <Search />
+            </InputGroupAddon>
+            {search && (
+              <InputGroupAddon align="inline-end">
+                <Link href="/admin/users">
+                  <X className="size-4" />
+                  Clear
+                </Link>
+              </InputGroupAddon>
+            )}
+          </InputGroup>
+        </div>
+      </form>
+
+      {users.length === 0 && (
+        <div className="flex w-full max-w-4xl items-center justify-center py-12 text-muted-foreground">
+          <span className="text-sm font-medium">
+            {search ? "No users match your search." : "No users found."}
+          </span>
+        </div>
+      )}
 
       {/* Mobile Card Layout */}
       <div className="flex w-full max-w-4xl flex-col gap-3 md:hidden">
@@ -148,7 +197,11 @@ export default async function Page({
           {currentPage > 1 ? (
             <Button
               variant="outline"
-              render={<Link href={`/admin/users?page=${currentPage - 1}`} />}
+              render={
+                <Link
+                  href={`/admin/users?page=${currentPage - 1}${search ? `&search=${encodeURIComponent(search)}` : ""}`}
+                />
+              }
             >
               Previous
             </Button>
@@ -165,7 +218,11 @@ export default async function Page({
           {currentPage < totalPages ? (
             <Button
               variant="outline"
-              render={<Link href={`/admin/users?page=${currentPage + 1}`} />}
+              render={
+                <Link
+                  href={`/admin/users?page=${currentPage + 1}${search ? `&search=${encodeURIComponent(search)}` : ""}`}
+                />
+              }
             >
               Next
             </Button>

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "bunx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "lucide-icons": {
+      "command": "bunx",
+      "args": ["lucide-icons-mcp", "--stdio"]
+    }
+  }
+}
