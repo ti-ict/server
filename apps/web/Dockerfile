@@ -5,6 +5,7 @@ FROM oven/bun:alpine AS dependencies
 WORKDIR /app
 COPY package.json bun.lock ./
 COPY apps/web/package.json ./apps/web/package.json
+COPY apps/docs/package.json ./apps/docs/package.json
 RUN --mount=type=cache,target=/root/.bun \
     bun install --frozen-lockfile
 

@@ -34,7 +34,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/ti-ict/server/tree/main/apps/docs"
+          editUrl: "https://github.com/ti-ict/server/edit/main/apps/docs"
         },
         theme: {
           customCss: "./src/css/custom.css"
