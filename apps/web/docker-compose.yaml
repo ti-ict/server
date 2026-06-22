@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/lordimmaculate/proxmox-frontend-next:latest
+    image: ghcr.io/ti-ict/server:latest
     env_file:
       - .env
     ports:

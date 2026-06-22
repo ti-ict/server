@@ -13,8 +13,8 @@ const config: Config = {
   url: "https://docs.ti-ict.be",
   baseUrl: "/",
 
-  organizationName: "lordimmaculate",
-  projectName: "proxmox-frontend-next",
+  organizationName: "ti-ict",
+  projectName: "server",
 
   trailingSlash: false,
 
@@ -34,8 +34,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl:
-            "https://github.com/lordimmaculate/proxmox-frontend-next/tree/main/"
+          editUrl: "https://github.com/ti-ict/server/tree/main/"
         },
         theme: {
           customCss: "./src/css/custom.css"
@@ -69,7 +68,7 @@ const config: Config = {
           label: "TI-ICT VMs"
         },
         {
-          href: "https://github.com/lordimmaculate/proxmox-frontend-next",
+          href: "https://github.com/ti-ict/server",
           label: "GitHub",
           position: "right"
         }
@@ -95,7 +94,7 @@ const config: Config = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/lordimmaculate/proxmox-frontend-next"
+              href: "https://github.com/ti-ict/server"
             }
           ]
         }
