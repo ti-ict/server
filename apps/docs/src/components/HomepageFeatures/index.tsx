@@ -13,20 +13,20 @@ const FeatureList: FeatureItem[] = [
     title: "Server Management",
     icon: "🖥️",
     description:
-      "Documentatie over welke software er geïnstalleerd is op de TI-ICT servers, hoe je toegang krijgt tot de servers, en hoe je ze kunt beheren.",
+      "Documentatie over welke software er geïnstalleerd is op de TI-ICT servers, hoe je toegang krijgt tot de servers, en hoe je ze kunt beheren."
   },
   {
     title: "VM Web Interface",
     icon: "🌐",
     description:
-      "Handleiding voor het gebruik van de webinterface van de virtuele machines (VMs), inclusief het starten, stoppen, en beheren van VMs via de webbrowser.",
+      "Handleiding voor het gebruik van de webinterface van de virtuele machines (VMs), inclusief het starten, stoppen, en beheren van VMs via de webbrowser."
   },
   {
     title: "Administration",
     icon: "⚙️",
     description:
-      "Informatie over het beheer van de TI-ICT apps, inclusief het instellen van gebruikersrechten, het monitoren van systeemstatus, en het uitvoeren van administratieve taken.",
-  },
+      "Informatie over het beheer van de TI-ICT apps, inclusief het instellen van gebruikersrechten, het monitoren van systeemstatus, en het uitvoeren van administratieve taken."
+  }
 ];
 
 function Feature({ title, icon, description }: FeatureItem) {

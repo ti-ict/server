@@ -1,7 +1,9 @@
 ---
 sidebar_position: 2
 ---
+
 # Netwerk
+
 - **Router**: Oude server school (OPNSense)
 - **Gateway:** 172.16.0.1
 - **Subnet Mask (Totale Netwerk):** 172.16.0.0/16 (255.255.0.0)
@@ -9,15 +11,17 @@ sidebar_position: 2
 ## VLANs
 
 ### VLAN 10: Management
+
 - Vaste IP's voor netwerkapparatuur en servers.
 - Bereik: 172.16.0.0 - 172.16.0.255 (/24)
 
-| **Apparaat**           | **IP**      | **DNS-naam**          |
-| ---------------------- | ----------- | --------------------- |
-| Router                 | 172.16.0.1  | opnsense.l.ti-ict.be  |
-| Dell N1548P Switch     | 172.16.0.80 | switch.l.ti-ict.be    |
+| **Apparaat**       | **IP**      | **DNS-naam**         |
+| ------------------ | ----------- | -------------------- |
+| Router             | 172.16.0.1  | opnsense.l.ti-ict.be |
+| Dell N1548P Switch | 172.16.0.80 | switch.l.ti-ict.be   |
 
 ### VLAN 20: Servers
+
 - Alle apparaten hebben hier een vaste IP.
 - Bereik: 172.16.1.0 - 172.16.1.255 (/24)
 
@@ -29,10 +33,12 @@ sidebar_position: 2
 | PowerEdge R620 2       | 172.16.1.21 | proxmox-2.l.ti-ict.be |
 
 ### VLAN 30: VMs
+
 - Apparaten hier hebben een IP gegeven door de router (DHCP)
 - Bereik: 172.16.100.0-172.16.103.255 (/22)
 
 ### LAN 2: PCs
+
 - Apparaten hier krijgen een IP door DHCP direct van router
 - Bereik: 172.16.6.0-172.16.7.255 (/23)
 - Deze PCs kunnen aan de VMs

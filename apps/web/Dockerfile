@@ -5,7 +5,7 @@ FROM oven/bun:alpine AS dependencies
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN --mount=type=cache,target=/root/.npm \
-    bun install --frozen-lockfile
+    bun install
 
 # ============================================
 # Stage 2: Build Next.js application in standalone mode

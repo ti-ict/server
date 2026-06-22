@@ -8,15 +8,15 @@ De Dell PowerEdge R620 is een 1U rack-server. Er zijn twee identieke servers in 
 
 ## Specificaties
 
-| Component | Details |
-|-----------|---------|
-| Form factor | 1U rack |
-| Processors | 2x Intel Xeon E5-2650 v2 (8 cores elk) |
-| Geheugen | 512GB DDR3 ECC |
-| RAID controller | PERC H310 of H710 |
-| Schijven | 2x 300GiB |
-| Netwerk | 4x Gigabit, 2x 10Gigabit |
-| Remote management | iDRAC7 Enterprise |
+| Component         | Details                                |
+| ----------------- | -------------------------------------- |
+| Form factor       | 1U rack                                |
+| Processors        | 2x Intel Xeon E5-2650 v2 (8 cores elk) |
+| Geheugen          | 512GB DDR3 ECC                         |
+| RAID controller   | PERC H310 of H710                      |
+| Schijven          | 2x 300GiB                              |
+| Netwerk           | 4x Gigabit, 2x 10Gigabit               |
+| Remote management | iDRAC7 Enterprise                      |
 
 ## iDRAC
 
@@ -24,8 +24,8 @@ De iDRAC (Integrated Dell Remote Access Controller) laat je de server volledig r
 
 ### IP-adressen
 
-| Server | iDRAC IP | Server IP |
-|--------|----------|-----------|
+| Server | iDRAC IP      | Server IP     |
+| ------ | ------------- | ------------- |
 | R620 1 | `172.16.0.10` | `172.16.0.11` |
 | R620 2 | `172.16.0.20` | `172.16.0.21` |
 
@@ -48,12 +48,12 @@ Let goed op tijdens de POST (Power-On Self-Test) na een stroomcyclus of herstart
 
 ### Toetsen tijdens POST
 
-| Toets | Functie |
-|-------|---------|
-| F2 | System Setup (BIOS) |
-| F10 | Lifecycle Controller |
-| F11 | Boot Manager |
-| F12 | PXE boot |
+| Toets | Functie              |
+| ----- | -------------------- |
+| F2    | System Setup (BIOS)  |
+| F10   | Lifecycle Controller |
+| F11   | Boot Manager         |
+| F12   | PXE boot             |
 
 ### iDRAC Settings (Ctrl+E)
 
@@ -83,6 +83,7 @@ Download de gewenste ISO (bv. Debian, Proxmox VE, Ubuntu Server) en upload deze 
 ### Stap 4: Na installatie
 
 Na de OS installatie:
+
 - Verwijder de ISO mount via iDRAC (**Virtual Media** > **Disconnect Virtual Media**)
 - Configureer het IP-adres op het OS (vast IP in VLAN 10)
 - Start de server opnieuw op
@@ -103,6 +104,7 @@ De virtual disk verschijnt als een gewone schijf in het OS (/dev/sda).
 ## Lifecycle Controller (F10)
 
 De F10 Lifecycle Controller biedt ingebouwde tools voor:
+
 - Firmware updates (via netwerk of USB)
 - Hardware diagnostics
 - OS deployment (met Dell goedgekeurde images)

@@ -8,10 +8,10 @@ OPNSense draait op een aparte (oudere) server en fungeert als router/firewall vo
 
 ## Toegang
 
-| Interface | URL |
-|-----------|-----|
-| Webinterface | `https://172.16.0.1` |
-| SSH | `ssh root@172.16.0.1` |
+| Interface    | URL                   |
+| ------------ | --------------------- |
+| Webinterface | `https://172.16.0.1`  |
+| SSH          | `ssh root@172.16.0.1` |
 
 Standaard login: **root** (credentials staan in de kluis).
 
@@ -19,11 +19,11 @@ Standaard login: **root** (credentials staan in de kluis).
 
 De firewall regelt de VLANs van het netwerk:
 
-| VLAN | Interface | CIDR | Doel |
-|------|-----------|------|------|
-| 10 | `vlan10` | `172.16.0.1/24` | Servers |
-| 20 | `vlan20` | `172.16.1.1/22` | VMs |
-| 30 | `vlan30` | `172.16.5.1/23` | PCs |
+| VLAN | Interface | CIDR            | Doel    |
+| ---- | --------- | --------------- | ------- |
+| 10   | `vlan10`  | `172.16.0.1/24` | Servers |
+| 20   | `vlan20`  | `172.16.1.1/22` | VMs     |
+| 30   | `vlan30`  | `172.16.5.1/23` | PCs     |
 
 ### VLAN toevoegen
 
@@ -40,13 +40,13 @@ Standaard staan VLANs geïsoleerd. Voeg regels toe onder **Firewall > Rules > [i
 
 **Voorbeeld: VLAN 30 (PCs) naar VLAN 10 (servers) toestaan:**
 
-| Parameter | Waarde |
-|-----------|--------|
-| Action | Pass |
-| Protocol | Any |
-| Source | `172.16.5.0/23` |
+| Parameter   | Waarde          |
+| ----------- | --------------- |
+| Action      | Pass            |
+| Protocol    | Any             |
+| Source      | `172.16.5.0/23` |
 | Destination | `172.16.0.0/24` |
-| Log | Optioneel |
+| Log         | Optioneel       |
 
 ### NAT
 
@@ -54,11 +54,11 @@ VMs en PCs hebben internet via **outbound NAT**. Dit staat standaard aan onder *
 
 ## DHCP
 
-| VLAN | DHCP range | Static leases |
-|------|-----------|---------------|
-| 10 | Vaste IPs | Servers, iDRAC |
-| 20 | `172.16.1.2` - `172.16.4.254` | - |
-| 30 | `172.16.5.2` - `172.16.6.254` | - |
+| VLAN | DHCP range                    | Static leases  |
+| ---- | ----------------------------- | -------------- |
+| 10   | Vaste IPs                     | Servers, iDRAC |
+| 20   | `172.16.1.2` - `172.16.4.254` | -              |
+| 30   | `172.16.5.2` - `172.16.6.254` | -              |
 
 DHCP instellingen per interface onder **Services > DHCPv4 > [interface]**.
 

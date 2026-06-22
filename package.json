@@ -18,7 +18,7 @@
     "start:web": "bun run --filter '@proxmox-frontend/web' start",
     "start:docs": "bun run --filter '@proxmox-frontend/docs' start",
     "lint": "bun run --filter '*' lint",
-    "clean": "bun run --filter '*' clean",
+    "prettier": "bun run --filter '*' prettier",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -30,9 +30,13 @@
     "unrs-resolver"
   ],
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix --max-warnings 0",
-      "prettier --write"
+    "apps/web/**/*.{ts,tsx}": [
+      "bun run --filter '@proxmox-frontend/web' lint",
+      "bun run --filter '@proxmox-frontend/web' prettier"
+    ],
+    "apps/docs/**/*.{ts,tsx,md,mdx}": [
+      "bun run --filter '@proxmox-frontend/docs' lint",
+      "bun run --filter '@proxmox-frontend/docs' prettier"
     ]
   }
 }

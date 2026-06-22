@@ -10,8 +10,8 @@ const config: Config = {
     v4: true
   },
 
-  url: "https://lordimmaculate.github.io",
-  baseUrl: process.env.GITHUB_PAGES ? "/proxmox-frontend-next/" : "/",
+  url: "https://docs.ti-ict.be",
+  baseUrl: "/",
 
   organizationName: "lordimmaculate",
   projectName: "proxmox-frontend-next",
