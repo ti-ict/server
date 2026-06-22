@@ -21,7 +21,8 @@ ARG GIT_COMMIT_SHA
 ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN bun run --filter '@proxmox-frontend/web' db:generate
+RUN cd apps/web && bunx prisma generate
+RUN bun run --filter '@proxmox-frontend/web' build
 RUN bun run --filter '@proxmox-frontend/web' build
 
 # ============================================
