@@ -68,6 +68,11 @@ const config: Config = {
           label: "TI-ICT VMs"
         },
         {
+          href: "https://vps.ti-ict.be",
+          label: "VPS",
+          position: "right"
+        },
+        {
           href: "https://github.com/ti-ict/server",
           label: "GitHub",
           position: "right"
