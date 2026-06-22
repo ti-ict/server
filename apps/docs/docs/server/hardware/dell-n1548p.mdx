@@ -1,0 +1,165 @@
+---
+sidebar_position: 2
+---
+
+# Dell Networking N1548P
+
+De Dell Networking N1548P is een managed Gigabit switch met PoE+ (Power over Ethernet). Deze switch verbindt alle servers, maar niet de Wi-Fi apparaten. De switch is aangesloten op de OPNSense router via een trunk poort die alle VLANs doorlaat.
+
+## Specificaties
+
+| Eigenschap | Details |
+|-----------|---------|
+| Model | Dell Networking N1548P |
+| Poorten | 48x Gigabit RJ45 + 4x SFP+ (10Gb uplinks) |
+| PoE+ | 48 PoE+ poorten (totaal budget ~740W) |
+| Management | Webinterface, SSH, SNMP, console |
+| VLANs | 802.1Q VLANs (max 4094) |
+
+## Toegang
+
+| Interface | Details |
+|-----------|---------|
+| IP | `172.16.0.2` |
+| Webinterface | `https://172.16.0.2` |
+| Console | Seriële kabel (RJ45 naar DB9) via de consolepoort |
+
+Standaard login: **admin** / wachtwoord staat in de kluis.
+
+## Initiële Configuratie
+
+### Via console kabel
+
+1. Verbind een seriële kabel met de consolepoort van de switch
+2. Gebruik een terminalprogramma (115200 baud, 8N1)
+3. Login met de admin credentials
+
+### IP instellen
+
+Eenmaal ingelogd via console:
+
+```
+console> enable
+console# configure
+console(config)# interface vlan 1
+console(config-if-vlan1)# ip address 172.16.0.2 255.255.0.0
+console(config-if-vlan1)# exit
+console(config)# ip default-gateway 172.16.0.1
+console(config)# end
+console# copy running-config startup-config
+```
+
+## VLAN Configuratie
+
+### VLANs aanmaken
+
+Via de webinterface: **VLAN > 802.1Q > VLAN Configuration**
+
+Of via CLI:
+
+```
+console(config)# vlan 10
+console(config-vlan10)# name Servers
+console(config-vlan10)# exit
+console(config)# vlan 20
+console(config-vlan20)# name VMs
+console(config-vlan20)# exit
+console(config)# vlan 30
+console(config-vlan30)# name PCs
+console(config-vlan30)# exit
+```
+
+### Poorten aan VLAN toewijzen
+
+```
+console(config)# interface gi1/0/1
+console(config-if-gi1/0/1)# switchport mode access
+console(config-if-gi1/0/1)# switchport access vlan 10
+console(config-if-gi1/0/1)# exit
+
+# Meerdere poorten tegelijk
+console(config)# interface range gi1/0/2-48
+console(config-if-range)# switchport mode access
+console(config-if-range)# switchport access vlan 20
+```
+
+### Trunk poort (voor router)
+
+De verbinding naar de OPNSense router moet getagged verkeer doorlaten:
+
+```
+console(config)# interface gi1/0/48
+console(config-if-gi1/0/48)# switchport mode trunk
+console(config-if-gi1/0/48)# switchport trunk allowed vlan add 10,20,30
+console(config-if-gi1/0/48)# exit
+```
+
+## PoE Configuratie
+
+PoE+ is standaard ingeschakeld op alle poorten. Je kan het per poort beheren:
+
+### Via webinterface
+
+Ga naar **Power over Ethernet > Configuration** om:
+
+- PoE per poort in/uitschakelen
+- Het vermogensbudget per poort in te stellen
+- De status van alle PoE-poorten te bekijken
+
+### Via CLI
+
+```
+# PoE status bekijken
+console# show power inline
+
+# PoE op een specifieke poort uitschakelen
+console(config)# interface gi1/0/1
+console(config-if-gi1/0/1)# power inline never
+```
+
+## Poort Status & Troubleshooting
+
+```
+# Alle poorten en hun status
+console# show interfaces status
+
+# Link status van één poort
+console# show interfaces gi1/0/1
+
+# MAC adres tabel
+console# show mac-address-table
+
+# Fouten tellen per poort
+console# show interfaces counters
+```
+
+## Factory Reset
+
+Om de switch naar fabrieksinstellingen te herstellen:
+
+### Via webinterface
+
+Ga naar **Maintenance > Reset > Factory Reset**.
+
+### Via CLI
+
+```
+console# reload
+Are you sure you want to reload the stack? (y/n) y
+```
+
+Of voor een volledige reset zonder config:
+
+```
+console# erase startup-config
+console# reload
+```
+
+## Firmware Update
+
+1. Download de nieuwste firmware van Dell Support
+2. Ga in de webinterface naar **Maintenance > File Download/Upload > Firmware**
+3. Upload de nieuwe firmware image
+4. Ga naar **Maintenance > Reset > Set Boot**
+5. Selecteer de nieuwe image als boot image
+6. Herstart de switch (**Maintenance > Reset > Reload**)

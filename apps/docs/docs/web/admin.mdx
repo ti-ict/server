@@ -1,0 +1,35 @@
+---
+sidebar_position: 5
+---
+
+# Beheerdersfuncties
+
+Alle beheerderspagina's bevinden zich onder `/{locale}/admin` en vereisen de `admin`-rol.
+
+## Dashboard
+
+Het dashboard op `/{locale}/admin` toont:
+
+- Totaal aantal gebruikers
+- Totaal aantal VMs
+- Totaal RAM en vCPUs toegewezen over alle VMs
+- Live CPU- en geheugengebruik (van het hostsysteem via de `os`-module)
+- Git commit-SHA en build-datum
+- Ververs elke 2 seconden via `router.refresh()`
+
+## Gebruikersbeheer
+
+De gebruikerspagina op `/{locale}/admin/users` biedt:
+
+- Gepagineerde gebruikerslijst met e-mailzoekopdracht
+- Gebruiker bewerken: naam, toegestaan RAM (MiB), toegestane vCPUs, rol (gebruiker/beheerder)
+- Gebruiker verwijderen (via better-auth admin API)
+
+## VM-beheer
+
+De beheerders-VM-pagina op `/{locale}/admin/vms` biedt:
+
+- Lijst van alle VMs van alle gebruikers
+- Filteren op gebruiker via een combobox
+- VM-details bekijken en acties uitvoeren
+- Gepagineerde resultaten

@@ -25,6 +25,8 @@
     "create_vm": "VM aanmaken",
     "profile": "Profiel",
     "sign_in": "Inloggen",
+    "server": "Server",
+    "ti_ict_vms": "TI-ICT VMs",
     "admin": "Beheer",
     "sign_out": "Uitloggen"
   },

@@ -1,0 +1,25 @@
+---
+sidebar_position: 1
+---
+
+# Overzicht
+
+De Proxmox Frontend is een Next.js 16-applicatie die een webgebaseerde interface biedt voor het beheren van Proxmox VE virtuele machines.
+
+## Functionaliteiten
+
+- **Microsoft Entra ID-aanmelding**: studenten en medewerkers authenticeren met hun organisatieaccount
+- **VM-levenscyclusbeheer**: aanmaken, starten, uitschakelen, herstarten, stoppen en verwijderen van VMs
+- **VM-delen**: VMs delen met andere gebruikers via e-mailuitnodigingen
+- **Beheerdersdashboard**: live systeemstatistieken, gebruikerstellingen, resourcetoewijzing
+- **Gebruikersbeheer**: beheerders kunnen gebruikersprofielen bewerken, resourcelimieten instellen en rollen beheren
+- **CLI-tool**: commandoregelinterface voor beheerderstaken
+- **Donker/licht thema**: themabewuste UI met next-themes
+- **Internationalisatie**: Nederlandse en Engelse taalondersteuning
+
+## Belangrijkste principes
+
+- **Server-first architectuur**: de meeste pagina's zijn async server-componenten; interactiviteit wordt alleen toegevoegd waar nodig
+- **Rolgebaseerde toegangscontrole**: routes en acties zijn beveiligd op basis van gebruikersrol (beheerder vs. gebruiker)
+- **Resourcequota**: per-gebruiker limieten op RAM en vCPUs worden afgedwongen tijdens VM-creatie
+- **Immutable infrastructuur**: VMs worden gekloond van een template met cloud-init

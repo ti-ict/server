@@ -1,0 +1,72 @@
+---
+sidebar_position: 6
+---
+
+# Internationalisatie
+
+De app gebruikt **next-intl** voor internationalisatie met twee talen:
+
+| Taal                   | Code |
+| ---------------------- | ---- |
+| Nederlands (standaard) | `nl` |
+| Engels                 | `en` |
+
+## Routering
+
+Elke URL wordt voorafgegaan door de taalcode (`localePrefix: "always"`), waardoor routes er als volgt uitzien:
+
+- `/nl/vms`, Nederlandse VM-lijst
+- `/en/vms`, Engelse VM-lijst
+- `/nl/auth/signin`, Nederlandse aanmeldpagina
+
+Taaldetectie respecteert cookies, browserheaders en valt terug op `nl`.
+
+## Vertaalbestanden
+
+Berichten worden opgeslagen in `messages/{locale}.json` met sleutels georganiseerd per domein:
+
+```
+common         — Gedeelde UI-teksten
+nav            — Navigatielabels
+breadcrumbs    — Broodkruimellabels
+vm.list        — VM-lijstpagina
+vm.detail      — VM-detailpagina
+vm.create      — VM-aanmaakformulier
+vm.actions     — VM-acties
+vm.share       — VM-delen
+vm.errors      - VM-foutmeldingen
+admin.users    — Gebruikersbeheer
+admin.vms      — VM-beheer
+admin.edit_user
+admin.errors
+profile        — Gebruikersprofiel
+auth           — Authenticatiepagina
+email          — E-mailsjablonen
+locale         — Taalkiezer
+```
+
+## Gebruik
+
+**Server-componenten** gebruiken `getTranslations`:
+
+```tsx
+import { getTranslations } from "next-intl/server";
+
+const t = await getTranslations("vm.list");
+return <h1>{t("title")}</h1>;
+```
+
+**Client-componenten** gebruiken `useTranslations`:
+
+```tsx
+import { useTranslations } from "next-intl";
+const t = useTranslations("common");
+```
+
+## Navigatie
+
+Navigatie-helpers van `src/i18n/navigation.ts` wrappen next-intl:
+
+```tsx
+import { Link, useRouter, redirect, usePathname } from "@/i18n/navigation";
+```

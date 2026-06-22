@@ -1,0 +1,9 @@
+{
+  "label": "Hardware",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "description": "Documentatie voor de hardware"
+  }
+}

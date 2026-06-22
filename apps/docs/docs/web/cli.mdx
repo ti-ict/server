@@ -1,0 +1,43 @@
+---
+sidebar_position: 8
+---
+
+# CLI-Tool
+
+De applicatie bevat een commandoregelprogramma (`pmx-front`) voor beheerderstaken.
+
+## Gebruik
+
+```bash
+bun run --filter @proxmox/web cli -- <commando> [opties]
+```
+
+## Commando's
+
+### `user info <email>`
+
+Toon informatie over een gebruiker:
+
+```bash
+bun run --filter @proxmox/web cli -- user info student@voorbeeld.nl
+```
+
+### `user promote <email>`
+
+Promoveer een gebruiker naar beheerdersrol:
+
+```bash
+bun run --filter @proxmox/web cli -- user promote student@voorbeeld.nl
+```
+
+### `user delete <email>`
+
+Verwijder een gebruiker (met interactieve bevestiging):
+
+```bash
+bun run --filter @proxmox/web cli -- user delete student@voorbeeld.nl
+```
+
+## Implementatie
+
+De CLI is gebouwd met **Commander** voor argumentparsing en **@inquirer/prompts** voor interactieve bevestigingen. Het maakt rechtstreeks verbinding met de database via Prisma en de better-auth admin API.

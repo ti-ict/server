@@ -1,0 +1,111 @@
+---
+sidebar_position: 1
+---
+
+# Dell PowerEdge R620
+
+De Dell PowerEdge R620 is een 1U rack-server. Er zijn twee identieke servers in gebruik.
+
+## Specificaties
+
+| Component | Details |
+|-----------|---------|
+| Form factor | 1U rack |
+| Processors | 2x Intel Xeon E5-2650 v2 (8 cores elk) |
+| Geheugen | 512GB DDR3 ECC |
+| RAID controller | PERC H310 of H710 |
+| Schijven | 2x 300GiB |
+| Netwerk | 4x Gigabit, 2x 10Gigabit |
+| Remote management | iDRAC7 Enterprise |
+
+## iDRAC
+
+De iDRAC (Integrated Dell Remote Access Controller) laat je de server volledig remote beheren, ook als de server uit staat of niet opstart.
+
+### IP-adressen
+
+| Server | iDRAC IP | Server IP |
+|--------|----------|-----------|
+| R620 1 | `172.16.0.10` | `172.16.0.11` |
+| R620 2 | `172.16.0.20` | `172.16.0.21` |
+
+### Toegang
+
+1. Open een browser naar het iDRAC IP (bv. `https://172.16.0.10`)
+2. Login met de **root** credentials (staan in de kluis)
+3. Via de **Virtual Console** krijg je een KVM-over-IP sessie
+
+Een Virtual Console geeft je volledige controle over het scherm, toetsenbord en muis, alsof je fysiek voor de server zit.
+
+## BIOS openen
+
+Let goed op tijdens de POST (Power-On Self-Test) na een stroomcyclus of herstart.
+
+1. Open de **iDRAC Virtual Console**
+2. Klik op **Power On** of herstart de server via **Power > Reset System**
+3. Houd de **Virtual Console** in de gaten
+4. Druk op **F2** zodra het Dell logo verschijnt
+
+### Toetsen tijdens POST
+
+| Toets | Functie |
+|-------|---------|
+| F2 | System Setup (BIOS) |
+| F10 | Lifecycle Controller |
+| F11 | Boot Manager |
+| F12 | PXE boot |
+
+### iDRAC Settings (Ctrl+E)
+
+Tijdens POST zie je ook `Ctrl+E` voor iDRAC configuratie. Hiermee stel je het iDRAC IP, subnetmask en gateway in.
+
+## OS Installeren
+
+### Stap 1: ISO voorbereiden
+
+Download de gewenste ISO (bv. Debian, Proxmox VE, Ubuntu Server) en upload deze naar een plek die de iDRAC kan bereiken (een lokale share of direct uploaden via de iDRAC webinterface).
+
+### Stap 2: ISO mounten via iDRAC
+
+1. Login op de iDRAC webinterface
+2. Ga naar **Virtual Media** > **Virtual CD/DVD**
+3. Klik op **Connect Virtual Media**
+4. Kies **Map CD/DVD** of **Browse** en selecteer je ISO
+5. Klik op **Plug In** en **Map Device**
+
+### Stap 3: Booten van ISO
+
+1. Herstart de server via iDRAC (**Power** > **Reset System**)
+2. Druk tijdens POST op **F11** voor Boot Manager
+3. Selecteer **Virtual CD/DVD** als opstartapparaat
+4. Volg het installatieproces van het gekozen OS
+
+### Stap 4: Na installatie
+
+Na de OS installatie:
+- Verwijder de ISO mount via iDRAC (**Virtual Media** > **Disconnect Virtual Media**)
+- Configureer het IP-adres op het OS (vast IP in VLAN 10)
+- Start de server opnieuw op
+
+## RAID Configuratie
+
+De PERC H310/H710 controller beheert de fysieke schijven. Je stelt RAID in via het **PERC BIOS** (Ctrl+R tijdens POST).
+
+1. Druk op **Ctrl+R** tijdens POST om de PERC BIOS configuratietool te openen
+2. Maak een **Virtual Disk** aan van de beschikbare fysieke schijven
+3. Kies RAID-niveau:
+   - **RAID 10**: beste prestatie en redundantie (aanbevolen voor productie)
+   - **RAID 5**: goede balans (als er 3+ schijven zijn)
+   - **RAID 0**: geen redundantie (enkel voor test)
+
+De virtual disk verschijnt als een gewone schijf in het OS (/dev/sda).
+
+## Lifecycle Controller (F10)
+
+De F10 Lifecycle Controller biedt ingebouwde tools voor:
+- Firmware updates (via netwerk of USB)
+- Hardware diagnostics
+- OS deployment (met Dell goedgekeurde images)
+- iDRAC/BIOS configuratie
+
+Dit is handig voor het updaten van firmware zonder een OS te installeren.

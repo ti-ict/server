@@ -1,0 +1,68 @@
+---
+sidebar_position: 4
+---
+
+# VM-Beheer
+
+## VM-lijst
+
+De VM-lijst op `/{locale}/vms` toont:
+
+- VMs die eigendom zijn van de huidige gebruiker
+- VMs die gedeeld zijn met de huidige gebruiker (gemarkeerd als gedeeld)
+- VM-statusindicator (actief, gestopt, etc.)
+- Snelle info: hostnaam, IP-adres, RAM, vCPUs, OS-schijf
+
+## VM aanmaken
+
+Het aanmaken van een VM op `/{locale}/vms/create` gebruikt een formulier met:
+
+- Hostnaam-invoer
+- SSH-openbare sleutelveld (gevalideerd met Zod)
+- RAM-schuifregelaar (in GiB, opgeslagen als MiB)
+- vCPU-schuifregelaar
+
+De aanmaakpijplijn (`createVmAction`):
+
+1. Controleert beschikbare resources tegen de `allowedRam`/`allowedCpus`-limieten van de gebruiker
+2. Wijst automatisch het volgende beschikbare VM-ID toe
+3. Vindt een beschikbaar IP uit het `172.16.100.2-172.16.103.254`-bereik
+4. Kloont Proxmox-template 9000 (Debian)
+5. Vergroot schijf met +20G
+6. Past cloud-init-configuratie toe (gebruiker, SSH-sleutels, IP, DNS)
+7. Start de VM
+8. Maakt een database-record aan
+9. Voert een rollback uit (verwijdert DB-record) bij mislukking
+
+## VM-detail
+
+De VM-detailpagina op `/{locale}/vms/[vm]` toont:
+
+- VM-informatie (hostnaam, IP, status, RAM, vCPUs)
+- SSH-verbindingsgegevens (commando, SSH-config-fragment)
+- Actieknoppen: starten, uitschakelen, herstarten, stoppen, verwijderen
+- Deeldialoog (nodig een andere gebruiker uit via e-mail)
+
+## VM-acties
+
+Alle energie-acties gebruiken de Proxmox API met een `waitForTask()`-pollenlus (tot 60 pogingen met 2-seconden intervallen). De databasestatus wordt na elke bewerking bijgewerkt.
+
+| Actie        | Effect                                 | Beschikbaar voor                          |
+| ------------ | -------------------------------------- | ----------------------------------------- |
+| Starten      | Schakelt de VM in                      | Eigenaar, beheerder, gedeeld (met acties) |
+| Uitschakelen | Graceful ACPI-uitschakeling            | Eigenaar, beheerder, gedeeld (met acties) |
+| Herstarten   | Graceful herstart                      | Eigenaar, beheerder, gedeeld (met acties) |
+| Stoppen      | Harde uitschakeling                    | Eigenaar, beheerder, gedeeld (met acties) |
+| Verwijderen  | VM vernietigen + DB-record verwijderen | Alleen eigenaar, beheerder                |
+
+## VM delen
+
+Gebruikers kunnen VMs delen via e-mail:
+
+1. Eigenaar voert het e-mailadres van de ontvanger in
+2. Server zoekt de gebruiker op via e-mail
+3. Een `SharedVm`-record wordt aangemaakt met de machtigingsinstellingen van de eigenaar
+4. Een e-mailuitnodiging wordt verzonden via Resend (React Email-template)
+5. Ontvanger accepteert op `/{locale}/vms/accept/[id]`
+
+Gedeelde VMs verschijnen in de VM-lijst van de ontvanger en kunnen worden beheerd volgens de `allowActions`-machtiging.

@@ -16,6 +16,15 @@ export function HeaderContents({
     <>
       {session?.user ? (
         <>
+          <Link href="/vms" className={buttonVariants({ variant: "outline" })}>
+            {t("ti_ict_vms")}
+          </Link>
+          <Link
+            href="/admin/vms"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            {t("server")}
+          </Link>
           <Link
             href="/vms/create"
             className={buttonVariants({ variant: "outline" })}

@@ -1,0 +1,60 @@
+---
+sidebar_position: 2
+---
+
+# Architectuur
+
+## Routering
+
+De app gebruikt de Next.js App Router met routegroepen voor layout-overerving:
+
+```
+src/app/
+├── [locale]/                     # Dynamisch locatie-segment (en, nl)
+│   ├── (app)/                    # Geauthenticeerde app-shell layout
+│   │   ├── admin/                # Beheerderspagina's (rol-beveiligd)
+│   │   ├── profile/              # Gebruikersprofiel
+│   │   ├── vms/                  # VM-beheer
+│   │   └── layout.tsx            # (app) shell: Header + Notifier
+│   └── auth/
+│       └── signin/               # Aanmeldpagina (geen header)
+├── api/
+│   └── auth/[...all]/            # better-auth API-handler
+├── globals.css
+└── layout.tsx                    # Root layout: ThemeProvider, Toaster
+```
+
+De `(app)` routegroep biedt een gedeelde layout met de app-header en het meldingensysteem. Auth-pagina's vallen buiten deze groep en hebben geen header.
+
+## Layout-hiërarchie
+
+1. **Root layout** (`src/app/layout.tsx`): `<html>`, lettertypes, `ThemeProvider`, `NextIntlClientProvider`, `TopLoader`, `Toaster`
+2. **Locatie-layout** (automatisch via `next-intl`): locatiedetectie en `<html lang>`-attribuut
+3. **App-shell** (`src/app/[locale]/(app)/layout.tsx`): `<Header>`, `<main>`-wrapper, `<Notifier>`
+
+## Middleware
+
+`src/middleware.ts` gebruikt `next-intl/middleware` voor locatie-onderhandeling:
+
+- Elke URL wordt voorafgegaan door de locatie (`/en/vms`, `/nl/beheer`)
+- De matcher sluit `/api`, `/_next/static`, `/.ico` en statische bestanden uit
+- Locatie wordt gedetecteerd via cookies, headers of valt terug op de standaard (`nl`)
+
+## Data ophalen
+
+- **Server-componenten** halen data rechtstreeks op via Prisma, de Proxmox API of better-auth-sessies
+- **Client-componenten** gebruiken server-actions voor mutaties en router refresh voor cache-invalidatie
+- De `checkSession()`-utility wordt bovenaan elke beveiligde pagina aangeroepen en verwijst door naar `/auth/signin` indien niet geauthenticeerd
+
+## Server-actions
+
+Alle mutaties zijn geïmplementeerd als server-actions (`"use server"`):
+
+- `proxmoxVmAction`: starten/uitschakelen/herstarten/stoppen/verwijderen van een VM
+- `inviteAction`: een VM delen met een andere gebruiker
+- `createVmAction`: volledige VM-voorzieningspijplijn
+- `editProfileAction`: beheerder werkt gebruikersgegevens bij
+
+## Automatisch verversen
+
+Het beheerdersdashboard gebruikt een 2-seconden polling-lus via `router.refresh()` om systeemstatistieken live te houden.

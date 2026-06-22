@@ -1,0 +1,65 @@
+---
+sidebar_position: 7
+---
+
+# Database
+
+De applicatie gebruikt **PostgreSQL** met **Prisma ORM** en de `@prisma/adapter-pg`-driver.
+
+## Schema
+
+### better-auth-modellen
+
+Deze modellen worden beheerd door better-auth voor authenticatie:
+
+- `User`: id, naam, e-mail, e-mailGeverifieerd, afbeelding, rol (gebruiker/beheerder), aangemaaktOp, bijgewerktOp
+- `Session`: id, verlooptOp, ipAdres, userAgent, gebruikersId
+- `Account`: id, accountId, providerId, gebruikersId, accessToken, refreshToken, idToken, scope, wachtwoord, verlooptOp
+- `Verification`: id, identificatie, waarde, verlooptOp, aangemaaktOp
+
+### Applicatiemodellen
+
+`Vm`: Virtuele machine-record:
+
+| Kolom     | Type                       | Beschrijving                    |
+| --------- | -------------------------- | ------------------------------- |
+| id        | Int (automatisch oplopend) | Primaire sleutel                |
+| vmid      | Int                        | Proxmox VM-ID                   |
+| node      | String                     | Proxmox node-naam               |
+| hostname  | String                     | VM-hostnaam                     |
+| userId    | String                     | Gebruikers-ID van eigenaar      |
+| status    | String                     | Huidige status (actief/gestopt) |
+| ram       | Int                        | RAM in MiB                      |
+| cpus      | Int                        | Aantal vCPUs                    |
+| ip        | String                     | Toegewezen IP-adres             |
+| osDisk    | Int                        | OS-schijfgrootte in GB          |
+| createdAt | DateTime                   | Aanmaaktijdstip                 |
+
+`SharedVm`: VM-deelrecord:
+
+| Kolom            | Type                       | Beschrijving                   |
+| ---------------- | -------------------------- | ------------------------------ |
+| id               | Int (automatisch oplopend) | Primaire sleutel               |
+| vmId             | Int                        | Foreign key naar Vm            |
+| sharedWithUserId | String                     | Gebruikers-ID van ontvanger    |
+| sharedByUserId   | String                     | Gebruikers-ID van eigenaar     |
+| allowActions     | Boolean                    | Of ontvanger de VM mag beheren |
+| accepted         | Boolean                    | Of uitnodiging is geaccepteerd |
+
+## Client-installatie
+
+De Prisma-client wordt gegenereerd naar `src/generated/prisma/` en geïnstantieerd als een singleton in `src/lib/prisma.ts`:
+
+```ts
+import { PrismaClient } from "@/generated/prisma/client";
+```
+
+## Migraties
+
+```bash
+# Genereer Prisma-client
+bun run --filter @proxmox/web db:generate
+
+# Voer migraties uit
+bun run --filter @proxmox/web db:migrate
+```

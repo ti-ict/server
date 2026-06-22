@@ -1,0 +1,47 @@
+---
+sidebar_position: 0
+---
+
+# Proxmox Frontend
+
+Een moderne webapplicatie voor het beheren van Proxmox VE virtuele machines in educatieve IT-omgevingen (TI-ICT).
+
+## Wat het doet
+
+Studenten kunnen inloggen met hun Microsoft Entra ID-account, virtuele machines aanmaken en beheren, deze delen met klasgenoten en hun resources monitoren. Beheerders hebben volledig overzicht met gebruikers- en VM-beheertools, een dashboard met live systeemstatistieken en een CLI voor batch-operaties.
+
+## Technologiestack
+
+- **Framework:** Next.js 16 (App Router), TypeScript
+- **Authenticatie:** better-auth met Microsoft Entra ID OAuth
+- **Database:** PostgreSQL via Prisma ORM
+- **UI:** Tailwind CSS v4, shadcn/ui-componenten, next-themes
+- **Virtualisatie:** Proxmox VE API (proxmox-api npm-pakket)
+- **E-mail:** Resend + React Email
+- **Internationalisatie:** next-intl (Nederlands en Engels)
+- **Pakketbeheerder:** Bun (monorepo met Docusaurus-documentatie)
+
+## Monorepo-structuur
+
+```
+proxmox-frontend-next/
+├── apps/
+│   ├── web/          # Next.js webapplicatie
+│   └── docs/         # Docusaurus-documentatie
+├── packages/         # Gedeelde pakketten (gereserveerd)
+├── package.json      # Root workspace-configuratie
+└── bun.lock          # Unified lockfile
+```
+
+## Snel aan de slag
+
+```bash
+# Installeer afhankelijkheden (vanuit de root)
+bun install
+
+# Start de webapplicatie
+bun run --filter @proxmox/web dev
+
+# Start de documentatiesite
+bun run --filter @proxmox/docs start
+```

@@ -1,0 +1,42 @@
+---
+sidebar_position: 3
+---
+
+# Authenticatie & Autorisatie
+
+## Aanmeldproces
+
+Authenticatie gebruikt **better-auth** met Microsoft Entra ID (Azure AD) als sociale provider. Gebruikers loggen in met hun organisatieaccount.
+
+- De aanmeldpagina bevindt zich op `/{locale}/auth/signin`
+- De API-route op `/api/auth/[...all]` verwerkt alle better-auth-endpoints (aanmelden, sessie, tokenverversing, etc.)
+- Sessies worden opgeslagen in PostgreSQL via Prisma
+
+## Sessieafhandeling
+
+De server-utility `checkSession()` uit `src/lib/utils-server.ts` leest de sessie met `headers()` van `next/headers` en verwijst niet-geauthenticeerde gebruikers door naar de aanmeldpagina.
+
+```ts
+const { data: session } = await checkSession();
+// session.user.id, session.user.email, session.user.role, ...
+```
+
+## Rolgebaseerde toegang
+
+Er zijn twee rollen: `user` (standaard) en `admin`.
+
+- **Beheerdersbeveiliging**: beheerderspagina's controleren `session.user.role !== "admin"` en geven een 403 of verwijzing
+- **Server-action beveiliging**: beheerdersacties (zoals het bewerken van gebruikersprofielen) controleren de sessierol voordat ze worden uitgevoerd
+- **Voorwaardelijke UI-rendering**: navigatielinks en UI-elementen worden voorwaardelijk weergegeven op basis van de rol
+
+## VM-autorisatie
+
+De `resolveVm()`-utility handhaaft gelaagde VM-toegangscontrole:
+
+| Gebruikerstype                     | Kan bekijken | Kan starten/stop/herstarten | Kan verwijderen |
+| ---------------------------------- | ------------ | --------------------------- | --------------- |
+| VM-eigenaar                        | Ja           | Ja                          | Ja              |
+| Beheerder                          | Ja           | Ja                          | Ja              |
+| Gedeelde gebruiker (allowActions)  | Ja           | Ja                          | Nee             |
+| Gedeelde gebruiker (!allowActions) | Ja           | Nee                         | Nee             |
+| Iedereen anders                    | Nee          | —                           | —               |

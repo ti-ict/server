@@ -1,0 +1,81 @@
+---
+sidebar_position: 5
+---
+
+# OPNSense
+
+OPNSense draait op een aparte (oudere) server en fungeert als router/firewall voor het hele netwerk.
+
+## Toegang
+
+| Interface | URL |
+|-----------|-----|
+| Webinterface | `https://172.16.0.1` |
+| SSH | `ssh root@172.16.0.1` |
+
+Standaard login: **root** (credentials staan in de kluis).
+
+## VLAN Configuratie
+
+De firewall regelt de VLANs van het netwerk:
+
+| VLAN | Interface | CIDR | Doel |
+|------|-----------|------|------|
+| 10 | `vlan10` | `172.16.0.1/24` | Servers |
+| 20 | `vlan20` | `172.16.1.1/22` | VMs |
+| 30 | `vlan30` | `172.16.5.1/23` | PCs |
+
+### VLAN toevoegen
+
+1. Ga naar **Interfaces > Other Types > VLAN**
+2. Klik **Add** en vul VLAN tag en parent interface in
+3. Ga naar **Interfaces > Assignments** en voeg het VLAN toe
+4. Configureer het IP en de DHCP server voor de nieuwe interface
+
+## Firewall Regels
+
+### Inter-VLAN routing
+
+Standaard staan VLANs geïsoleerd. Voeg regels toe onder **Firewall > Rules > [interface]**.
+
+**Voorbeeld: VLAN 30 (PCs) naar VLAN 10 (servers) toestaan:**
+
+| Parameter | Waarde |
+|-----------|--------|
+| Action | Pass |
+| Protocol | Any |
+| Source | `172.16.5.0/23` |
+| Destination | `172.16.0.0/24` |
+| Log | Optioneel |
+
+### NAT
+
+VMs en PCs hebben internet via **outbound NAT**. Dit staat standaard aan onder **Firewall > NAT > Outbound** (Automatic rule generation).
+
+## DHCP
+
+| VLAN | DHCP range | Static leases |
+|------|-----------|---------------|
+| 10 | Vaste IPs | Servers, iDRAC |
+| 20 | `172.16.1.2` - `172.16.4.254` | - |
+| 30 | `172.16.5.2` - `172.16.6.254` | - |
+
+DHCP instellingen per interface onder **Services > DHCPv4 > [interface]**.
+
+Static mappings toevoegen voor servers en vaste apparaten via **Services > DHCPv4 > [interface] > Add** met MAC-adres en gewenst IP.
+
+## DNS
+
+OPNSense draait als DNS-forwarder. Dit kan je instellen onder **Services > Unbound DNS > General**.
+
+- Enable Unbound DNS
+- Stel eventueel custom DNS servers in (bv. Cloudflare `1.1.1.1`, Google `8.8.8.8`)
+- **Access Lists** kan je gebruiken om te beperken wie de DNS mag gebruiken
+
+## Firmware Updates
+
+1. Ga naar **System > Firmware > Updates**
+2. Klik **Check for updates**
+3. Indien beschikbaar: **Upgrade**
+
+Belangrijk: maak eerst een backup (**System > Configuration > Backups**) voor je een upgrade doet.

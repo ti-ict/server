@@ -1,0 +1,51 @@
+---
+sidebar_position: 10
+---
+
+# Ontwikkeling
+
+## Vereisten
+
+- [Bun](https://bun.sh) 1.3+
+- PostgreSQL-database
+- Node.js 20+
+
+## Installatie
+
+```bash
+# Installeer afhankelijkheden
+bun install
+
+# Kopieer omgevingsbestand
+cp apps/web/.env.example apps/web/.env
+
+# Genereer Prisma-client
+bun run --filter @proxmox/web db:generate
+
+# Voer database-migraties uit
+bun run --filter @proxmox/web db:migrate
+
+# Start de ontwikkelserver
+bun run --filter @proxmox/web dev
+```
+
+## Projectscripts
+
+| Commando                                    | Beschrijving                      |
+| ------------------------------------------- | --------------------------------- |
+| `bun run dev`                               | Start alle apps in ontwikkelmodus |
+| `bun run build`                             | Bouw alle apps                    |
+| `bun run lint`                              | Lint alle apps                    |
+| `bun run --filter @proxmox/web dev`         | Start alleen de web-app           |
+| `bun run --filter @proxmox/docs start`      | Start alleen de documentatiesite  |
+| `bun run --filter @proxmox/web db:generate` | Genereer Prisma-client opnieuw    |
+| `bun run --filter @proxmox/web db:migrate`  | Voer Prisma-migraties uit         |
+
+## Code-conventies
+
+- **Server-first**: geef de voorkeur aan async server-componenten; voeg `"use client"` alleen toe voor interactiviteit
+- **Server-actions** voor alle mutaties, stel nooit API-routes bloot voor CRUD
+- **i18n**: alle gebruikersgerichte teksten gaan via `next-intl`-vertalingen
+- **Formulieren**: gebruik `react-hook-form` + `zod`-validatie + shadcn UI-componenten
+- **Toegangscontrole**: server-side autorisatie op elke pagina en actie
+- **Styling**: Tailwind CSS v4 met `@theme`-richtlijnen; donkere modus via `@custom-variant dark`

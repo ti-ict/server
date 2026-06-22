@@ -1,0 +1,107 @@
+---
+sidebar_position: 4
+---
+
+# Proxmox VE
+
+Proxmox Virtual Environment (VE) is het virtualisatieplatform dat op beide PowerEdge R620 servers draait. Het combineert KVM en LXC met een webinterface.
+
+## Toegang
+
+| Server | Webinterface |
+|--------|-------------|
+| R620 1 | `https://172.16.0.11:8006` |
+| R620 2 | `https://172.16.0.21:8006` |
+
+Login met de **root** credentials van de server.
+
+## Cluster
+
+Beide servers staan in een Proxmox cluster. Dit laat je toe om VMs te migreren tussen servers en alles van één interface te beheren.
+
+- Cluster status zie je rechtsboven in de webinterface
+- Je kan VMs live migreren via **Migrate** (rechterklik op VM)
+- Storage en netwerken worden gedeeld over de cluster
+
+## Storage
+
+De servers gebruiken de volgende storage:
+
+- **local**: OS schijf, ISO images, templates
+- **local-lvm**: thin-provisioned LVM voor VM schijven
+
+## Templates
+
+Proxmox gebruikt templates om snel VMs te klonen. De template staat op de `local` storage onder **VM templates**.
+
+Bestaande templates:
+
+| Template | Gebruik |
+|----------|---------|
+| Template 9000 | Debian 12 cloud-init template (standaard voor studenten VMs) |
+
+### Template aanmaken (indien nodig)
+
+```bash
+# Template voorbeeld: Debian 12
+qm create 9000 --memory 2048 --cores 2 --net0 virtio,bridge=vmbr0
+qm importdisk 9000 debian-12-generic-amd64.qcow2 local-lvm
+qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
+qm set 9000 --ide2 local:cloudinit
+qm set 9000 --boot c --bootdisk scsi0
+qm set 9000 --serial0 socket --vga serial0
+qm set 9000 --agent 1
+qm template 9000
+```
+
+## Backups
+
+Proxmox kan backups maken van VMs via de webinterface of via een cron job:
+
+```bash
+# Handmatige backup van VM 100 naar /var/lib/vz/dump
+vzdump 100 --compress zstd --mode snapshot
+```
+
+Automatische backups worden ingesteld via **Datacenter > Backup** in de webinterface.
+
+## Handige CLI commando's
+
+```bash
+# Alle VMs tonen
+qm list
+
+# Alle containers tonen
+pct list
+
+# Cluster status
+pvecm status
+
+# Storage status
+pvesm status
+
+# Node logs
+pve node log
+
+# Services herstarten
+systemctl restart pvedaemon
+systemctl restart pveproxy
+
+# Storage gebruik
+df -h
+pvesm status
+```
+
+## Netwerk
+
+De Proxmox bridge (`vmbr0`) is verbonden met VLAN 10. VMs krijgen een IP via het VLAN 20 subnet (`172.16.1.0/22`). De bridge is geconfigureerd in `/etc/network/interfaces`:
+
+```
+auto vmbr0
+iface vmbr0 inet static
+    address 172.16.0.11/16
+    gateway 172.16.0.1
+    bridge-ports eno1
+    bridge-stp off
+    bridge-fd 0
+```

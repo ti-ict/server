@@ -1,0 +1,45 @@
+---
+sidebar_position: 9
+---
+
+# Implementatie
+
+## Docker
+
+De app bevat een Docker-installatie met `output: "standalone"` in de Next.js-configuratie.
+
+```bash
+# Bouw de Docker-image
+docker build -t proxmox-frontend apps/web
+
+# Draai met docker-compose
+docker compose -f apps/web/docker-compose.yaml up
+```
+
+Het `.dockerignore`-bestand sluit `node_modules`, `.next` en andere build-artefacten uit.
+
+## Omgevingsvariabelen
+
+Vereiste omgevingsvariabelen:
+
+| Variabele             | Beschrijving                        |
+| --------------------- | ----------------------------------- |
+| `DATABASE_URL`        | PostgreSQL-verbindingsreeks         |
+| `BETTER_AUTH_SECRET`  | Auth-geheim voor better-auth        |
+| `BETTER_AUTH_URL`     | Publieke URL van de app             |
+| `AZURE_CLIENT_ID`     | Microsoft Entra ID app-client-ID    |
+| `AZURE_CLIENT_SECRET` | Microsoft Entra ID app-clientgeheim |
+| `AZURE_TENANT_ID`     | Microsoft Entra ID tenant-ID        |
+| `PROXMOX_HOST`        | Proxmox VE-host                     |
+| `PROXMOX_USER`        | Proxmox API-gebruiker               |
+| `PROXMOX_PASSWORD`    | Proxmox API-wachtwoord              |
+| `RESEND_API_KEY`      | Resend API-sleutel voor e-mail      |
+| `RESEND_FROM`         | Afzender-e-mailadres                |
+
+## Build
+
+```bash
+bun run --filter @proxmox/web build
+```
+
+De standalone build-uitvoer staat in `apps/web/.next/standalone/`.

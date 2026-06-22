@@ -1,0 +1,9 @@
+{
+  "label": "TI-ICT VMs",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Documentatie voor de Next.js webapplicatie"
+  }
+}
