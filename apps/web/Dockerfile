@@ -17,12 +17,12 @@ WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY package.json bun.lock ./
 COPY apps/web ./apps/web
+RUN ln -s /app/node_modules /app/apps/web/node_modules
 ARG GIT_COMMIT_SHA
 ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN cd apps/web && bunx prisma generate
-RUN bun run --filter '@proxmox-frontend/web' build
+RUN node_modules/.bin/prisma generate --schema=apps/web/prisma/schema.prisma
 RUN bun run --filter '@proxmox-frontend/web' build
 
 # ============================================
